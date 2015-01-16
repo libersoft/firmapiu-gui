@@ -51,8 +51,8 @@ class mainWindow(QWidget):
         super(mainWindow, self).__init__(parent)
         windowicon = '/usr/share/icons/breeze/apps/scalable/klipper.svgz'
         self.setWindowIcon(QIcon(windowicon))
-        size = QSize(200,200)
-        
+        btnsize = QSize(150,150)
+        iconsize = QSize(50,50)
         #Definisco la finestra
         self.setWindowTitle("Firmapiù")
         #Definisco la label per le azioni
@@ -63,7 +63,7 @@ class mainWindow(QWidget):
         #TODO: Icona del bottone
         iconsignFile = "/usr/share/icons/breeze/actions/scalable/dialog-close.svgz"
         self.btnSignFile = QPushButton(QIcon(iconsignFile), 'F&irma')
-        self.btnSignFile.setMinimumSize(size)
+        self.btnSignFile.setMinimumSize(btnsize)
         self.btnSignFile.setToolTip("Firma il documento")        
         self.btnSignFile.clicked.connect(self.signfile)
         
@@ -71,7 +71,7 @@ class mainWindow(QWidget):
         #TODO: Icona del bottone
         iconsignFolder = "/usr/share/icons/breeze/actions/scalable/dialog-close.svgz"
         self.btnSignFolder = QPushButton(QIcon(iconsignFolder), 'Firma &Cartella')
-        self.btnSignFolder.setMinimumSize(size)   
+        self.btnSignFolder.setMinimumSize(btnsize)   
         self.btnSignFolder.setToolTip("Firma i file contenuti nella cartella")        
         self.btnSignFolder.clicked.connect(self.signfolder)
         
@@ -79,7 +79,7 @@ class mainWindow(QWidget):
         #TODO: Icona del bottone
         iconverFile = "/usr/share/icons/breeze/actions/scalable/dialog-close.svgz"
         self.btnVerFile = QPushButton(QIcon(iconverFile), '&Verifica')
-        self.btnVerFile.setMinimumSize(size)
+        self.btnVerFile.setMinimumSize(btnsize)
         self.btnVerFile.setToolTip("Verifica la firma del documento")        
         self.btnVerFile.clicked.connect(self.versignfile)
         
@@ -87,14 +87,17 @@ class mainWindow(QWidget):
         #TODO: Icona del bottone
         iconverFolder = "/usr/share/icons/breeze/actions/scalable/dialog-close.svgz"
         self.btnVerFolder = QPushButton(QIcon(iconverFolder), 'Verifica c&artella')
-        self.btnVerFolder.setMinimumSize(size)
+        self.btnVerFolder.setMinimumSize(btnsize)
         self.btnVerFolder.setToolTip("Verifica la firma dei documenti contenuti nella cartella")        
         self.btnVerFolder.clicked.connect(self.versignfolder)
         
         #Definisco il bottone Chiudi
         iconesc = "/usr/share/icons/breeze/actions/scalable/dialog-close.svgz"
-        self.btnEsc = QPushButton(QIcon(iconesc), '&Esci')
-        self.btnEsc.setMinimumSize(size)
+        #self.btnEsc = QPushButton(QIcon(iconesc), '&Esci')
+        self.btnEsc = QPushButton()
+        self.btnEsc.setIcon(QIcon(iconesc))
+        self.btnEsc.setIconSize(iconsize)
+        self.btnEsc.setMinimumSize(150,100)
         self.btnEsc.setToolTip("Chiude l'applicazione")        
         self.btnEsc.clicked.connect(QCoreApplication.instance().quit)
 
