@@ -17,16 +17,16 @@ class dbus_call_daemon:
         result = self.fpiudaemon.call('sign',filepath,options)
         reply = QDBusReply(result)
         if result.type() == 3:
-            dialog_functions.error_dialog(None, 'Error', result.errorMessage())
+            dialog_functions.error_dialog(None, 'Errore', result.errorMessage())
         else:
             for i in range(len(filepath)):
-                QMessageBox.information(None, 'Info', reply.value()[filepath[i]])          
+                QMessageBox.information(None, 'Info', reply.value()[filepath[i]])   
             
     def verify(self, filepath):
         result = self.fpiudaemon.call('verify',filepath)
         reply = QDBusReply(result)
         if result.type() == 3:
-            dialog_functions.error_dialog(None, 'Error', result.errorMessage())
+            dialog_functions.error_dialog(None, 'Errore', result.errorMessage())
         else:
             for i in range(len(filepath)):
                 QMessageBox.information(None, 'Info', reply.value()[filepath[i]])
@@ -39,7 +39,7 @@ class dbus_call_daemon:
             self.verify( filepath)
             
         else:
-            print ('Unrecognized action')
+            print ('Opzione non riconosciuta')
   
 
 class dialog_functions(QWidget):
@@ -53,11 +53,12 @@ class dialog_functions(QWidget):
             if len(pin[0]) == pinlen:
                 return pin[0]
             else:               
-                dialog_functions.error_dialog(None,'Wrong PIN', 'PIN must be ' + str(pinlen) + ' characters long')
+                dialog_functions.error_dialog(None,'PIN errato', 'Il PIN *deve* essere lungo '
+                                               + str(pinlen) + ' caratteri')
                 pin = dialog_functions.pin_dialog()
                 return pin
         else:
-            dialog_functions.error_dialog(None, 'Error', "The action couldn't be accomplished due to user abortion")
+            dialog_functions.error_dialog(None, 'Errore', "L'azione non è stata completata a causa dell'interruzione dell'utente")
     def file_dialog():
         pass
     
@@ -77,7 +78,7 @@ class action_functions(QWidget):
                 if not(options['pin'] == None):
                     dbus_call_daemon('sign', filelist[0],options)
             else:
-                dialog_functions.error_dialog(None, 'Error', 'Please select a destination folder for the signed files')
+                dialog_functions.error_dialog(None, 'Errore', 'Selezionare una cartella di destinazione per il file firmato')
                     
         
     def versignfile(self):
@@ -98,7 +99,7 @@ class action_functions(QWidget):
                 options['pin'] = dialog_functions.pin_dialog()
                 dbus_call_daemon('sign', files, options)
         else:
-            dialog_functions.error_dialog(None, "No File", "The selected folder doesn't contain any file or you didn't select any folder")
+            dialog_functions.error_dialog(None, "Nessun file", "La cartella selezionata non contiene nessun file oppure non è stata selezionata nessuna cartella")
         
     def versignfolder(self):
         verFolderDialog = QFileDialog()
@@ -108,7 +109,7 @@ class action_functions(QWidget):
         if len(files) > 0: 
             dbus_call_daemon('verify',files, '')
         else:
-            dialog_functions.error_dialog(None, "No File","The selected folder doesn't contain any valid file\nor you didn't select any folder")
+            dialog_functions.error_dialog(None, "Nessun file","La cartella selezionata non contiene nessun file oppure non è stata selezionata nessuna cartella")
             
 #     Stub of more detailed output 
 #         for i in range(len(inpaths)):
