@@ -14,7 +14,7 @@ class dbus_call_daemon:
                                 parent=None) 
     
     def sign(self, filepath, options ):
-        result = self.fpiudaemon.call('sign',filepath,options)
+        result = self.fpiudaemon.call('sign', filepath, options)
         reply = QDBusReply(result)
         if result.type() == 3:
             dialog_functions.error_dialog(None, 'Errore', result.errorMessage())
@@ -23,7 +23,7 @@ class dbus_call_daemon:
                 QMessageBox.information(None, 'Info', reply.value()[filepath[i]])   
             
     def verify(self, filepath):
-        result = self.fpiudaemon.call('verify',filepath)
+        result = self.fpiudaemon.call('verify', filepath)
         reply = QDBusReply(result)
         if result.type() == 3:
             dialog_functions.error_dialog(None, 'Errore', result.errorMessage())
@@ -36,7 +36,7 @@ class dbus_call_daemon:
         if action == 'sign':
             self.sign(filepath, options )
         elif action == 'verify':
-            self.verify( filepath)
+            self.verify(filepath)
             
         else:
             print ('Opzione non riconosciuta')
@@ -53,7 +53,7 @@ class dialog_functions(QWidget):
             if len(pin[0]) == pinlen:
                 return pin[0]
             else:               
-                dialog_functions.error_dialog(None,'PIN errato', 'Il PIN *deve* essere lungo '
+                dialog_functions.error_dialog(None, 'PIN errato', 'Il PIN *deve* essere lungo '
                                                + str(pinlen) + ' caratteri')
                 pin = dialog_functions.pin_dialog()
                 return pin
@@ -76,17 +76,17 @@ class action_functions(QWidget):
             if options['outdir'] != '':
                 options['pin'] = dialog_functions.pin_dialog()
                 if not(options['pin'] == None):
-                    dbus_call_daemon('sign', filelist[0],options)
+                    dbus_call_daemon('sign', filelist[0], options)
             else:
                 dialog_functions.error_dialog(None, 'Errore', 'Selezionare una cartella di destinazione per il file firmato')
                     
         
     def versignfile(self):
         verDialog = QFileDialog()
-        filelist = verDialog.getOpenFileNames(caption="Scegli il file da verificare:",filter='Signed Files(*.p7m *.p7s)')
+        filelist = verDialog.getOpenFileNames(caption="Scegli il file da verificare:", filter='Signed Files(*.p7m *.p7s)')
         if filelist[0] != []:
             for i in range(len (filelist)-1):
-                dbus_call_daemon('verify',filelist[0],'')     
+                dbus_call_daemon('verify', filelist[0],'')     
         
     def signfolder(self):
         options = {}
@@ -107,9 +107,9 @@ class action_functions(QWidget):
         files = glob.glob(folder+"/*.p7m*")
         files = files + glob.glob(folder+"/*.p7s*")
         if len(files) > 0: 
-            dbus_call_daemon('verify',files, '')
+            dbus_call_daemon('verify', files, '')
         else:
-            dialog_functions.error_dialog(None, "Nessun file","La cartella selezionata non contiene nessun file oppure non è stata selezionata nessuna cartella")
+            dialog_functions.error_dialog(None, "Nessun file", "La cartella selezionata non contiene nessun file oppure non è stata selezionata nessuna cartella")
             
 #     Stub of more detailed output 
 #         for i in range(len(inpaths)):
@@ -203,15 +203,15 @@ class mainWindow(QWidget):
         mainLayout.addLayout(labelLayout,       0, 0)
         mainLayout.addLayout(btnLayoutSActions, 1, 0)
         mainLayout.addLayout(btnLayoutVActions, 2, 0)
-        mainLayout.addLayout(logAreaLayout,     3,  0)
+        mainLayout.addLayout(logAreaLayout,     3, 0)
         mainLayout.addLayout(btnLayoutEsc,      4, 0)
         self.setLayout(mainLayout)
     def __init__(self):
         mainWindow.uicreate(self)
            
-if __name__=='__main__':
+if __name__ == '__main__':
     qt_app = QApplication(sys.argv)
-    app=mainWindow()
+    app = mainWindow()
     app.show()
     qt_app.exec()
     
