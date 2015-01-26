@@ -21,6 +21,7 @@ class dbus_call_daemon:
         else:
             for i in range(len(filepath)):
                 QMessageBox.information(None, 'Info', reply.value()[filepath[i]])   
+#                 mainWindow.write_log(None, reply.value()[filepath[i]])
             
     def verify(self, filepath):
         result = self.fpiudaemon.call('verify', filepath)
@@ -117,6 +118,9 @@ class action_functions(QWidget):
         
   
 class mainWindow(QWidget):
+    def write_log(self,texttoappend):
+        a=self.logArea.append(str(texttoappend))
+        mainWindow.uicreate(a)
 
     def uicreate(self):
         
@@ -167,7 +171,7 @@ class mainWindow(QWidget):
         #Definisco la log area
         
         self.logArea = QTextEdit()
-        self.logArea.setReadOnly(True)
+#         self.logArea.setReadOnly(True)
         self.logArea.setMaximumHeight(300)
         self.logArea.append('Here the logs be will ') 
                             
@@ -213,6 +217,7 @@ if __name__ == '__main__':
     qt_app = QApplication(sys.argv)
     app = mainWindow()
     app.show()
-    qt_app.exec()
-    
+    qt_app.exec_()
+    qt_app.deleteLater()
+    sys.exit()
     
