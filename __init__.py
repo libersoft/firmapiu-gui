@@ -9,6 +9,15 @@ class DbusCallDaemon:
     fpiudaemon = QDBusInterface("it.libersoft.FirmapiuDInterface",
                                 "/it/libersoft/FirmapiuD", interface = 'it.libersoft.FirmapiuDInterface',
                                 parent = None)
+    def test_connection(self):
+        status = QDBusInterface("it.libersoft.FirmapiuDInterface",
+                                "/it/libersoft/FirmapiuD", interface = 'org.freedesktop.DBus.Peer',
+                                parent = None).call('Ping')
+        if status.type() == 3:
+            DialogFunctions.error_dialog('Errore', 'Il demone non è attivo,\nnon sarà possibile effettuare\nopearazioni'
+                                                   ' che utilizzino la smartcard.')
+        else:
+            pass
 
     def sign(self, filepath, options):
         """
@@ -170,6 +179,8 @@ class ActionFunctions(QWidget):
         super(ActionFunctions, self).__init__(parent)
 
 
+
+
 class MainWindow(QWidget):
     def uicreate(self):
         # super(MainWindow, self).__init__()
@@ -252,12 +263,15 @@ class MainWindow(QWidget):
         MainWindow.btn_dnd.setFixedSize(300, 100)
         MainWindow.btn_dnd.setToolTip("Trascina qui per firmare o verificare")
 
+        #MainWindow.btn_dnd = QDrag
+        #MainWindow.btn_dnd.setAcceptDrops(True)
+        #MainWindow.btn_dnd.sen
+
         #Definisco la log area
 
         MainWindow.log_area = QTextEdit()
         MainWindow.log_area.setReadOnly(True)
         MainWindow.log_area.setMinimumHeight(125)
-
 
 
         #       Definisco il layout generale
@@ -299,6 +313,8 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.uicreate()
+        DbusCallDaemon.test_connection(self)
+
 
 
 if __name__ == '__main__':
@@ -307,3 +323,5 @@ if __name__ == '__main__':
     app.show()
     qt_app.exec_()
     qt_app.deleteLater()
+
+
