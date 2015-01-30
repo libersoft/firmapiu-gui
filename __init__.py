@@ -96,6 +96,7 @@ class DialogFunctions(QWidget):
             DialogFunctions.error_dialog('Errore', 'Azione sconosciuta')
             return False
         filelist = QFileDialog.getOpenFileNames(QFileDialog(), caption = caption, filter = filters)
+        print(filelist)
         return filelist
 
     def folder_dialog(self, action):
@@ -111,6 +112,7 @@ class DialogFunctions(QWidget):
             DialogFunctions.error_dialog('Errore', 'Azione sconosciuta')
             return False
         folder = QFileDialog.getExistingDirectory(QFileDialog(), caption, filters)
+        print(folder)
         return folder
 
     def error_dialog(caption, text):
@@ -124,9 +126,10 @@ class DialogFunctions(QWidget):
 
 class ActionFunctions(QWidget):
     #write_to_log = pyqtSignal(str)
-    def sign_file(self):
+    def sign_file(self, filelist=[[]]):
         options = {}
-        filelist = DialogFunctions.file_dialog(DialogFunctions(), 'sign')
+        if filelist[0] == []:
+            filelist = DialogFunctions.file_dialog(DialogFunctions(), 'sign')
         if filelist[0] != []:
             options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir')
             if options['outdir'] != '':
@@ -138,15 +141,17 @@ class ActionFunctions(QWidget):
                                                        'per il file firmato')
 
 
-    def ver_sign_file(self):
-        filelist = DialogFunctions.file_dialog(DialogFunctions(), 'verify')
+    def ver_sign_file(self, filelist=[[]]):
+        if filelist[0] == []:
+            filelist = DialogFunctions.file_dialog(DialogFunctions(), 'verify')
         if filelist[0] != []:
             for i in range(len(filelist) - 1):
                 DbusCallDaemon('verify', filelist[0], '')
 
-    def sign_folder(self):
+    def sign_folder(self, folder=[]):
         options = {}
-        folder = DialogFunctions.folder_dialog(DialogFunctions(), 'sign')
+        if folder == []:
+            folder = DialogFunctions.folder_dialog(DialogFunctions(), 'sign')
         files = glob.glob(folder + "/*.*")
         if (len(files) > 0):
             options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir')
@@ -179,9 +184,46 @@ class ActionFunctions(QWidget):
         super(ActionFunctions, self).__init__(parent)
 
 
+class LabelDND(QLabel):
+    def __init__(self,title, parent):
+        super(LabelDND, self).__init__(title, parent)
+        self.setAcceptDrops(True)
+
+    def dragEnterEvent(self, e):
+
+        if e.mimeData().hasUrls():
+            e.accept()
+        elif e.mimeData().hasFormat('application/pkcs7-mime'):
+            e.accept()
+        else:
+            e.ignore()
+
+    def dropEvent(self, e):
+        urls = (e.mimeData().urls())
+        to_be_signed = [[]]
+        to_be_checked = [[]]
+        path = []
+        for i in range(len(urls)):
+            mime = QMimeType.name(QMimeDatabase().mimeTypeForFile(urls[i].toLocalFile()))
+            if mime == 'application/pkcs7-mime':
+                to_be_checked[0].append(urls[i].toLocalFile())
+            elif mime == 'inode/directory':
+                path.append(urls[i].toLocalFile())
+            else:
+                to_be_signed[0].append(urls[i].toLocalFile())
+        print(to_be_checked)
+        print(to_be_signed)
+        print(path)
+        if to_be_signed[0] != []:
+            ActionFunctions.sign_file(self,to_be_signed)
+        if to_be_checked[0] != []:
+            ActionFunctions.ver_sign_file(self,to_be_checked)
+        if path != []:
+            ActionFunctions.sign_folder(self, path)
 
 
 class MainWindow(QWidget):
+
     def uicreate(self):
         # super(MainWindow, self).__init__()
         windowicon = ""
@@ -205,6 +247,7 @@ class MainWindow(QWidget):
         MainWindow.btn_signFile.setFixedSize(btnsize)
         MainWindow.btn_signFile.setToolTip("Firma un documento")
         MainWindow.btn_signFile.clicked.connect(ActionFunctions.sign_file)
+
 
         #Definisco il bottone FirmaCartella
         #TODO: Icona del bottone
@@ -255,17 +298,14 @@ class MainWindow(QWidget):
         MainWindow.btn_esc.setToolTip("Chiude l'applicazione")
         MainWindow.btn_esc.clicked.connect(QCoreApplication.instance().quit)
 
-        #Definisco il bottone Drag and Drop
+        #Definisco la Drag and Drop area
         icon_dnd = ""
-        MainWindow.btn_dnd = QTextEdit()
-        MainWindow.btn_dnd.append('Trascina qui per firmare o verificare')
-        MainWindow.btn_dnd.setReadOnly(True)
-        MainWindow.btn_dnd.setFixedSize(300, 100)
-        MainWindow.btn_dnd.setToolTip("Trascina qui per firmare o verificare")
+        MainWindow.btn_dnd = LabelDND('Droppa Qui', None)
+        MainWindow.btn_dnd.setMinimumSize(300,150)
 
-        #MainWindow.btn_dnd = QDrag
-        #MainWindow.btn_dnd.setAcceptDrops(True)
-        #MainWindow.btn_dnd.sen
+
+
+
 
         #Definisco la log area
 
@@ -323,5 +363,3 @@ if __name__ == '__main__':
     app.show()
     qt_app.exec_()
     qt_app.deleteLater()
-
-
