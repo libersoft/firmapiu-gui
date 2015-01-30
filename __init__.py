@@ -97,7 +97,7 @@ class DialogFunctions(QWidget):
             return False
         filelist = QFileDialog.getOpenFileNames(QFileDialog(), caption = caption, filter = filters)
         print(filelist)
-        return filelist
+        return filelist[0]
 
     def folder_dialog(self, action):
         filters = ''
@@ -126,27 +126,27 @@ class DialogFunctions(QWidget):
 
 class ActionFunctions(QWidget):
     #write_to_log = pyqtSignal(str)
-    def sign_file(self, filelist=[[]]):
+    def sign_file(self, filelist=[]):
         options = {}
-        if filelist[0] == []:
+        if filelist == []:
             filelist = DialogFunctions.file_dialog(DialogFunctions(), 'sign')
-        if filelist[0] != []:
+        if filelist != []:
             options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir')
             if options['outdir'] != '':
                 options['pin'] = DialogFunctions.pin_dialog(DialogFunctions())
                 if not (options['pin'] is None):
-                    DbusCallDaemon('sign', filelist[0], options)
+                    DbusCallDaemon('sign', filelist, options)
             else:
                 DialogFunctions.error_dialog('Errore', 'Selezionare una cartella di destinazione '
                                                        'per il file firmato')
 
 
-    def ver_sign_file(self, filelist=[[]]):
-        if filelist[0] == []:
+    def ver_sign_file(self, filelist=[]):
+        if filelist == []:
             filelist = DialogFunctions.file_dialog(DialogFunctions(), 'verify')
-        if filelist[0] != []:
-            for i in range(len(filelist) - 1):
-                DbusCallDaemon('verify', filelist[0], '')
+        if filelist != []:
+            for i in range(len(filelist)):
+                DbusCallDaemon('verify', filelist, '')
 
     def sign_folder(self, folder=[]):
         options = {}
@@ -200,23 +200,23 @@ class LabelDND(QLabel):
 
     def dropEvent(self, e):
         urls = (e.mimeData().urls())
-        to_be_signed = [[]]
-        to_be_checked = [[]]
+        to_be_signed = []
+        to_be_checked = []
         path = []
         for i in range(len(urls)):
             mime = QMimeType.name(QMimeDatabase().mimeTypeForFile(urls[i].toLocalFile()))
             if mime == 'application/pkcs7-mime':
-                to_be_checked[0].append(urls[i].toLocalFile())
+                to_be_checked.append(urls[i].toLocalFile())
             elif mime == 'inode/directory':
                 path.append(urls[i].toLocalFile())
             else:
-                to_be_signed[0].append(urls[i].toLocalFile())
+                to_be_signed.append(urls[i].toLocalFile())
         print(to_be_checked)
         print(to_be_signed)
         print(path)
-        if to_be_signed[0] != []:
+        if to_be_signed != []:
             ActionFunctions.sign_file(self,to_be_signed)
-        if to_be_checked[0] != []:
+        if to_be_checked != []:
             ActionFunctions.ver_sign_file(self,to_be_checked)
         if path != []:
             ActionFunctions.sign_folder(self, path)
