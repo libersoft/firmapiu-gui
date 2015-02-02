@@ -16,6 +16,11 @@ class DbusCallDaemon:
         if status.type() == 3:
             DialogFunctions.error_dialog('Errore', 'Il demone non è attivo,\nnon sarà possibile effettuare\nopearazioni'
                                                    ' che utilizzino la smartcard.')
+            MainWindow.btn_signFile.setDisabled(True)
+            MainWindow.btn_signFolder.setDisabled(True)
+            MainWindow.btn_verFile.setDisabled(True)
+            MainWindow.btn_ver_folder.setDisabled(True)
+            MainWindow.btn_dnd.setAcceptDrops(False)
         else:
             pass
 
@@ -45,7 +50,7 @@ class DbusCallDaemon:
                                                                    ' i dettagli')
             for i in range(len(filepath)):
                 outstatus = reply.value()[filepath[i]]
-                if outstatus.split(sep=':', maxsplit=1)[1]:
+                if outstatus.split(sep=':', maxsplit=1)[1] == ' true':
                     exit_text = 'Firma legalmente valida'
                 else:
                     exit_text = outstatus.split(sep=':', maxsplit=1)[1]
@@ -201,19 +206,23 @@ class LabelDND(QLabel):
         path = []
         for i in range(len(urls)):
             mime = QMimeType.name(QMimeDatabase().mimeTypeForFile(urls[i].toLocalFile()))
-            if mime == 'application/pkcs7-mime':
+            if (mime == 'application/pkcs7-mime') or (mime == 'application/pkcs7-signature'):
                 to_be_checked.append(urls[i].toLocalFile())
             elif mime == 'inode/directory':
                 path.append(urls[i].toLocalFile())
             else:
                 to_be_signed.append(urls[i].toLocalFile())
 
-        if len(to_be_checked) > 1:
+        if len(to_be_checked) == 1:
+            ActionFunctions.ver_sign_file(ActionFunctions(), to_be_checked)
+        elif len(to_be_checked) > 1:
             to_be_signed.append(to_be_checked)
             DialogFunctions.info_dialog(DialogFunctions(), 'Attenzione', 'Stai per firmare un documento già firmato')
-        if to_be_signed:
+        else:
+            pass
+        if len(to_be_signed) > 0:
             ActionFunctions.sign_file(ActionFunctions(), to_be_signed)
-        if path:
+        if len(path) > 0:
             ActionFunctions.sign_folder(ActionFunctions(), path)
 
 class MainWindow(QWidget):
@@ -235,7 +244,7 @@ class MainWindow(QWidget):
 
 #       Definisco il bottone Firma
 #TODO: Icona del bottone
-        iconsign_file = "/usr/share/icons/breeze/actions/toolbar/dialog-close.svg"
+        iconsign_file = ""
         MainWindow.btn_signFile = QPushButton(QIcon(iconsign_file), 'F&irma')
         MainWindow.btn_signFile.setFixedSize(btnsize)
         MainWindow.btn_signFile.setToolTip("Firma un documento")
@@ -271,6 +280,7 @@ class MainWindow(QWidget):
         MainWindow.btn_manage_pin = QPushButton(QIcon(icon_manage_pin), 'Gestisci\nil PIN')
         MainWindow.btn_manage_pin.setFixedSize(btnsize)
         MainWindow.btn_manage_pin.setToolTip("Permette di gestire il PIN (Cambio PIN/Sblocco PIN/Cambio PUK)")
+        MainWindow.btn_manage_pin.setDisabled(True)
 #TODO: Funzione che fa le cose
 
 #       Definisco il bottone Riconosci SmartCard
@@ -279,6 +289,7 @@ class MainWindow(QWidget):
         MainWindow.btn_id_smartcard = QPushButton(QIcon(icon_id_smartcard), 'Riconoscimento\nSmartCard')
         MainWindow.btn_id_smartcard.setFixedSize(btnsize)
         MainWindow.btn_id_smartcard.setToolTip("Riconosimento del modello di SmartCard")
+        MainWindow.btn_id_smartcard.setDisabled(True)
 #TODO: Funzione che fa le cose
 
 #       Definisco il bottone Chiudi
@@ -293,6 +304,7 @@ class MainWindow(QWidget):
 #       Definisco la Drag and Drop area
         MainWindow.btn_dnd = LabelDND('Trascina qui', None)
         MainWindow.btn_dnd.setMinimumSize(300, 150)
+
 
 #       Definisco la label per il log
         log_label = QLabel("Area di log:")
