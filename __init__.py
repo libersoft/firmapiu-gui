@@ -210,14 +210,12 @@ class LabelDND(QLabel):
 
         if len(to_be_checked) > 1:
             to_be_signed.append(to_be_checked)
-            DialogFunctions.info_dialog(DialogFunctions(), to_be_checked)
+            DialogFunctions.info_dialog(DialogFunctions(), 'Attenzione', 'Stai per firmare un documento già firmato')
         if to_be_signed:
             ActionFunctions.sign_file(ActionFunctions(), to_be_signed)
         if path:
             ActionFunctions.sign_folder(ActionFunctions(), path)
 
-
-# noinspection PyUnresolvedReferences
 class MainWindow(QWidget):
 
     def uicreate(self):
