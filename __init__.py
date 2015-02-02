@@ -45,12 +45,11 @@ class DbusCallDaemon:
                                                                    ' i dettagli')
             for i in range(len(filepath)):
                 outstatus = reply.value()[filepath[i]]
-                if outstatus.split(sep=':',maxsplit=1)[1]:
+                if outstatus.split(sep=':', maxsplit=1)[1]:
                     exit_text = 'Firma legalmente valida'
                 else:
-                    exit_text = outstatus.split(sep=':',maxsplit=1)[1]
+                    exit_text = outstatus.split(sep=':', maxsplit=1)[1]
                 ActionFunctions.write_log(ActionFunctions, filepath[i] + ': ' + exit_text)
-
 
     def __init__(self, action, filepath, options):
         if action == 'sign':
@@ -85,7 +84,7 @@ class DialogFunctions(QWidget):
             DialogFunctions.error_dialog('Errore',
                                          'L\'azione non è stata completata a causa dell\'interruzione dell\'utente')
 
-    def file_dialog(dialog_functions, action):
+    def file_dialog(self, action):
         filters = ''
         if action == 'sign':
             caption = 'Scegli il file da firmare:'
@@ -97,7 +96,7 @@ class DialogFunctions(QWidget):
             return False
         filelist = QFileDialog.getOpenFileNames(QFileDialog(), caption = caption, filter = filters)
         print(filelist)
-        return filelist
+        return filelist[0]
 
     def folder_dialog(self, action):
         filters = ''
@@ -125,28 +124,27 @@ class DialogFunctions(QWidget):
 
 
 class ActionFunctions(QWidget):
-    #write_to_log = pyqtSignal(str)
-    def sign_file(self, filelist=[[]]):
+    def sign_file(self, filelist=[]):
         options = {}
-        if filelist[0] == []:
+        if not filelist:
             filelist = DialogFunctions.file_dialog(DialogFunctions(), 'sign')
-        if filelist[0] != []:
+        if filelist:
             options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir')
             if options['outdir'] != '':
                 options['pin'] = DialogFunctions.pin_dialog(DialogFunctions())
                 if not (options['pin'] is None):
-                    DbusCallDaemon('sign', filelist[0], options)
+                    DbusCallDaemon('sign', filelist, options)
             else:
                 DialogFunctions.error_dialog('Errore', 'Selezionare una cartella di destinazione '
                                                        'per il file firmato')
 
 
-    def ver_sign_file(self, filelist=[[]]):
-        if filelist[0] == []:
+    def ver_sign_file(self, filelist=[]):
+        if not filelist:
             filelist = DialogFunctions.file_dialog(DialogFunctions(), 'verify')
-        if filelist[0] != []:
-            for i in range(len(filelist) - 1):
-                DbusCallDaemon('verify', filelist[0], '')
+        if filelist:
+            for i in range(len(filelist)):
+                DbusCallDaemon('verify', filelist, '')
 
     def sign_folder(self, folder=[]):
         options = {}
@@ -167,7 +165,7 @@ class ActionFunctions(QWidget):
         folder = DialogFunctions.folder_dialog(DialogFunctions(), 'verify')
         files = glob.glob(folder + "/*.p7m*")
         files = files + glob.glob(folder + "/*.p7s*")
-        if len(files) > 0:
+        if files:
             DbusCallDaemon('verify', files, '')
         else:
             DialogFunctions.error_dialog("Nessun file", "La cartella selezionata non contiene nessun"
@@ -175,121 +173,117 @@ class ActionFunctions(QWidget):
                                                         " cartella")
 
     def write_log(self, text):
-        #self.write_to_log.connect(MainWindow.log_area.append(text))
-        #self.write_to_log.emit()
         MainWindow.log_area.append(text)
-
 
     def __init__(self, parent = None):
         super(ActionFunctions, self).__init__(parent)
 
 
 class LabelDND(QLabel):
-    def __init__(self,title, parent):
+    def __init__(self, title, parent):
         super(LabelDND, self).__init__(title, parent)
         self.setAcceptDrops(True)
+        self.setFrameStyle(QFrame.StyledPanel)
+        self.setFrameShadow(QFrame.Sunken)
+        self.setAlignment(Qt.AlignCenter)
 
     def dragEnterEvent(self, e):
 
         if e.mimeData().hasUrls():
-            e.accept()
-        elif e.mimeData().hasFormat('application/pkcs7-mime'):
             e.accept()
         else:
             e.ignore()
 
     def dropEvent(self, e):
         urls = (e.mimeData().urls())
-        to_be_signed = [[]]
-        to_be_checked = [[]]
+        to_be_signed = []
+        to_be_checked = []
         path = []
         for i in range(len(urls)):
             mime = QMimeType.name(QMimeDatabase().mimeTypeForFile(urls[i].toLocalFile()))
             if mime == 'application/pkcs7-mime':
-                to_be_checked[0].append(urls[i].toLocalFile())
+                to_be_checked.append(urls[i].toLocalFile())
             elif mime == 'inode/directory':
                 path.append(urls[i].toLocalFile())
             else:
-                to_be_signed[0].append(urls[i].toLocalFile())
-        print(to_be_checked)
-        print(to_be_signed)
-        print(path)
-        if to_be_signed[0] != []:
-            ActionFunctions.sign_file(self,to_be_signed)
-        if to_be_checked[0] != []:
-            ActionFunctions.ver_sign_file(self,to_be_checked)
-        if path != []:
-            ActionFunctions.sign_folder(self, path)
+                to_be_signed.append(urls[i].toLocalFile())
+
+        if len(to_be_checked) > 1:
+            to_be_signed.append(to_be_checked)
+            DialogFunctions.info_dialog(DialogFunctions(), to_be_checked)
+        if to_be_signed:
+            ActionFunctions.sign_file(ActionFunctions(), to_be_signed)
+        if path:
+            ActionFunctions.sign_folder(ActionFunctions(), path)
 
 
+# noinspection PyUnresolvedReferences
 class MainWindow(QWidget):
 
     def uicreate(self):
-        # super(MainWindow, self).__init__()
         windowicon = ""
         self.setWindowIcon(QIcon(windowicon))
         btnsize = QSize(125, 125)
         iconsize = QSize(50, 50)
 
-        #Definisco la finestra
+#       Definisco la finestra
         self.setWindowTitle("FirmaPiù")
         self.setMaximumWidth(410)
 
 
-        #Definisco la label per le azioni
+#       Definisco la label per le azioni
         action_label = QLabel("Scegli l'azione da effettuare:")
         action_label.setAlignment(Qt.AlignHCenter)
 
-        #Definisco il bottone Firma
-        #TODO: Icona del bottone
-        iconsign_file = ""
+#       Definisco il bottone Firma
+#TODO: Icona del bottone
+        iconsign_file = "/usr/share/icons/breeze/actions/toolbar/dialog-close.svg"
         MainWindow.btn_signFile = QPushButton(QIcon(iconsign_file), 'F&irma')
         MainWindow.btn_signFile.setFixedSize(btnsize)
         MainWindow.btn_signFile.setToolTip("Firma un documento")
         MainWindow.btn_signFile.clicked.connect(ActionFunctions.sign_file)
 
-
-        #Definisco il bottone FirmaCartella
-        #TODO: Icona del bottone
+#       Definisco il bottone FirmaCartella
+#TODO: Icona del bottone
         iconsign_folder = ""
         MainWindow.btn_signFolder = QPushButton(QIcon(iconsign_folder), 'Firma &cartella')
         MainWindow.btn_signFolder.setFixedSize(btnsize)
         MainWindow.btn_signFolder.setToolTip("Firma tutti i documenti di una cartella")
         MainWindow.btn_signFolder.clicked.connect(ActionFunctions.sign_folder)
 
-        #Definisco il bottone Verifica firma
-        #TODO: Icona del bottone
+#       Definisco il bottone Verifica firma
+#TODO: Icona del bottone
         iconver_file = ""
         MainWindow.btn_verFile = QPushButton(QIcon(iconver_file), '&Verifica')
         MainWindow.btn_verFile.setFixedSize(btnsize)
         MainWindow.btn_verFile.setToolTip("Verfica la firma di un documento")
         MainWindow.btn_verFile.clicked.connect(ActionFunctions.ver_sign_file)
 
-        #Definisco il bottone VerificafirmaCartella
-        #TODO: Icona del bottone
+#       Definisco il bottone VerificafirmaCartella
+#TODO: Icona del bottone
         iconver_folder = ""
         MainWindow.btn_ver_folder = QPushButton(QIcon(iconver_folder), 'Verifica c&artella')
         MainWindow.btn_ver_folder.setFixedSize(btnsize)
         MainWindow.btn_ver_folder.setToolTip("Verifica la firma di tutti i documenti di una cartella")
         MainWindow.btn_ver_folder.clicked.connect(ActionFunctions.ver_sign_folder)
 
-        #       Definisco il bottone Gestione PIN
-        #TODO: Icona del bottone
+#       Definisco il bottone Gestione PIN
+#TODO: Icona del bottone
         icon_manage_pin = ""
         MainWindow.btn_manage_pin = QPushButton(QIcon(icon_manage_pin), 'Gestisci\nil PIN')
         MainWindow.btn_manage_pin.setFixedSize(btnsize)
         MainWindow.btn_manage_pin.setToolTip("Permette di gestire il PIN (Cambio PIN/Sblocco PIN/Cambio PUK)")
-        #TODO: Funzione che fa le cose
+#TODO: Funzione che fa le cose
 
-        #       Definisco il bottone Riconosci SmartCard
-        #TODO: Icona del bottone
+#       Definisco il bottone Riconosci SmartCard
+#TODO: Icona del bottone
         icon_id_smartcard = ""
         MainWindow.btn_id_smartcard = QPushButton(QIcon(icon_id_smartcard), 'Riconoscimento\nSmartCard')
         MainWindow.btn_id_smartcard.setFixedSize(btnsize)
         MainWindow.btn_id_smartcard.setToolTip("Riconosimento del modello di SmartCard")
-        #TODO: Funzione che fa le cose
+#TODO: Funzione che fa le cose
 
-        #Definisco il bottone Chiudi
+#       Definisco il bottone Chiudi
         icon_esc = ""
         MainWindow.btn_esc = QPushButton('&Esci')
         MainWindow.btn_esc.setIcon(QIcon(icon_esc))
@@ -298,23 +292,21 @@ class MainWindow(QWidget):
         MainWindow.btn_esc.setToolTip("Chiude l'applicazione")
         MainWindow.btn_esc.clicked.connect(QCoreApplication.instance().quit)
 
-        #Definisco la Drag and Drop area
-        icon_dnd = ""
-        MainWindow.btn_dnd = LabelDND('Droppa Qui', None)
-        MainWindow.btn_dnd.setMinimumSize(300,150)
+#       Definisco la Drag and Drop area
+        MainWindow.btn_dnd = LabelDND('Trascina qui', None)
+        MainWindow.btn_dnd.setMinimumSize(300, 150)
 
+#       Definisco la label per il log
+        log_label = QLabel("Area di log:")
+        log_label.setAlignment(Qt.AlignHCenter)
 
-
-
-
-        #Definisco la log area
-
+#       Definisco la log area
         MainWindow.log_area = QTextEdit()
         MainWindow.log_area.setReadOnly(True)
         MainWindow.log_area.setMinimumHeight(125)
 
 
-        #       Definisco il layout generale
+#       Definisco il layout generale
 
         label_layout = QHBoxLayout()
         label_layout.addWidget(action_label)
@@ -334,13 +326,14 @@ class MainWindow(QWidget):
         btn_layout_3_row.addWidget(MainWindow.btn_esc)
         btn_layout_3_row.addWidget(MainWindow.btn_esc)
 
-        log_area_layout = QHBoxLayout()
+        log_area_layout = QVBoxLayout()
+        log_area_layout.addWidget(log_label)
         log_area_layout.addWidget(MainWindow.log_area)
 
         btn_layout_dnd = QHBoxLayout()
         btn_layout_dnd.addWidget(MainWindow.btn_dnd)
 
-        #Imposta il layout della finestra
+#       Imposta il layout della finestra
         main_layout = QGridLayout()
         main_layout.addLayout(label_layout, 0, 0)
         main_layout.addLayout(btn_layout_1_row, 1, 0)
@@ -354,7 +347,6 @@ class MainWindow(QWidget):
         super().__init__()
         self.uicreate()
         DbusCallDaemon.test_connection(self)
-
 
 
 if __name__ == '__main__':
