@@ -100,7 +100,6 @@ class DialogFunctions(QWidget):
             DialogFunctions.error_dialog('Errore', 'Azione sconosciuta')
             return False
         filelist = QFileDialog.getOpenFileNames(QFileDialog(), caption = caption, filter = filters)
-        print(filelist)
         return filelist[0]
 
     def folder_dialog(self, action):
@@ -116,7 +115,6 @@ class DialogFunctions(QWidget):
             DialogFunctions.error_dialog('Errore', 'Azione sconosciuta')
             return False
         folder = QFileDialog.getExistingDirectory(QFileDialog(), caption, filters)
-        print(folder)
         return folder
 
     def error_dialog(caption, text):
@@ -159,7 +157,7 @@ class ActionFunctions(QWidget):
         if (len(files) > 0):
             options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir')
             if options['outdir'] != '':
-                options['pin'] = DialogFunctions.pin_dialog
+                options['pin'] = DialogFunctions.pin_dialog(DialogFunctions())
                 DbusCallDaemon('sign', files, options)
         else:
             DialogFunctions.error_dialog("Nessun file", "La cartella selezionata non contiene nessun"
@@ -223,7 +221,7 @@ class LabelDND(QLabel):
         if len(to_be_signed) > 0:
             ActionFunctions.sign_file(ActionFunctions(), to_be_signed)
         if len(path) > 0:
-            ActionFunctions.sign_folder(ActionFunctions(), path)
+            ActionFunctions.sign_folder(ActionFunctions(), path[0])
 
 class MainWindow(QWidget):
 
