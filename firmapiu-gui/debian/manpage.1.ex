@@ -18,7 +18,7 @@
 .\" .sp <n>    insert n+1 empty lines
 .\" for manpage-specific macros, see man(7)
 .SH NAME
-firmapiu-gui \- program to do something
+firmapiu-gui\- program to do something
 .SH SYNOPSIS
 .B firmapiu-gui
 .RI [ options ] " files" ...

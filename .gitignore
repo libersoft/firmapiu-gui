@@ -3,6 +3,12 @@
 *.dsc
 *.changes
 *.build
-debian-packages/firmapiu-gui/.pybuild
-debian-packages/firmapiu-gui/.pybuild
-debian-packages/firmapiu-gui/debian/firmapiu-gui
+*.log
+*.substvars
+firmapiu-gui/.pybuild
+firmapiu-gui/.pybuild
+firmapiu-gui/debian/firmapiu-gui
+firmapiu-gui/firmapiu_gui.egg-info
+debian/firmapiu-gui.debhelper.log
+debian/firmapiu-gui.substvars
+
