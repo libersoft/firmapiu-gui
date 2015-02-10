@@ -7,15 +7,14 @@ setup(name = "firmapiu-gui",
 	author = "Valerio Baldisserotto",
 	author_email = "svalo@libersoft.it",
 	url = "http://libersoft.it",
-	packages = ['FirmaPiuGui'],
+	packages = find_packages(), 
 	license='GPL',
 	data_files=[('share/applications/',
-					['data/it.libersoft.firmapiu.desktop'])
+					['data/it.libersoft.firmapiu.desktop']),
 				('share/icons/hicolor/scalable/apps/',
-					['data/fpiu.svg'])
+					['data/fpiu.svg']),
 				('share/icons/hicolor/192x192/apps/',
 					['data/fpiu.png'])
 			   ],
-
 	long_description  = "This provides gui to firmapiud daemon. The gui should be easy-to-use"
 )

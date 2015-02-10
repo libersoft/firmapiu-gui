@@ -1,6 +1,7 @@
+#!/usr/bin/python3
 __author__ = 'svalo'
-from FirmaPiu.FirmaPiugui import *
 import sys
+from FirmaPiuGui.FirmaPiuGui import *
 if __name__ == '__main__':
     qt_app = QApplication(sys.argv)
     app = MainWindow()
