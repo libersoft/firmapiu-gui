@@ -1,0 +1,16 @@
+Source: firmapiu-gui
+Section: python
+Priority: optional
+Maintainer: Valerio Baldisserotto <svalo@libersoft.it>
+Build-Depends: debhelper (>= 9.0.0), python3 ,python3.4 (>= 3.4.~), dh-python 
+Standards-Version: 3.9.5
+Homepage: http://libersoft.it
+#Vcs-Git: git://git.debian.org/collab-maint/firmapiu.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/firmapiu.git;a=summary
+
+Package: firmapiu-gui
+Architecture: all
+Depends: python3-pyqt5 (>=5.3) 
+Description: Package containing GUI for firmapiud
+ This package contains a GUI for firmapiu daemon, an easy tool to sign and 
+ verify files complying with Italian law
