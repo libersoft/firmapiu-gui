@@ -11,3 +11,4 @@ firmapiu-gui/debian/firmapiu-gui
 firmapiu-gui/firmapiu_gui.egg-info
 firmapiu-gui/debian/firmapiu-gui.debhelper.log
 firmapiu-gui/debian/firmapiu-gui.substvars
+.*
