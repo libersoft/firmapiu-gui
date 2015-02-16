@@ -144,11 +144,9 @@ class ActionFunctions(QWidget):
 
 
     def ver_sign_file(self, filelist=[]):
-        if not filelist:
+        if filelist == []:
             filelist = DialogFunctions.file_dialog(DialogFunctions(), 'verify')
-        if filelist:
-            for i in range(len(filelist)):
-                DbusCallDaemon('verify', filelist, '')
+        DbusCallDaemon('verify', filelist, '')
 
     def sign_folder(self, folder=[]):
         options = {}
