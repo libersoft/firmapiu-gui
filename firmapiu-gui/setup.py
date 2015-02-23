@@ -14,7 +14,9 @@ setup(name = "firmapiu-gui",
 				('share/icons/hicolor/scalable/apps/',
 					['data/fpiu.svg']),
 				('share/icons/hicolor/192x192/apps/',
-					['data/fpiu.png'])
+					['data/fpiu.png']),
+				('share/firmapiu/data/icons/',
+					['data/icons/*']),
 			   ],
 	long_description  = "This provides gui to firmapiud daemon. The gui should be easy-to-use"
 )
