@@ -9,14 +9,14 @@ setup(name = "firmapiu-gui",
 	url = "http://libersoft.it",
 	packages = find_packages(), 
 	license='GPL',
+	package_data= {'data/icons/': ['data/icons/tango/*']},
+
 	data_files=[('share/applications/',
 					['data/it.libersoft.firmapiu.desktop']),
 				('share/icons/hicolor/scalable/apps/',
 					['data/fpiu.svg']),
 				('share/icons/hicolor/192x192/apps/',
 					['data/fpiu.png']),
-				('share/firmapiu/data/icons/',
-					['data/icons/*']),
 			   ],
 	long_description  = "This provides gui to firmapiud daemon. The gui should be easy-to-use"
 )
