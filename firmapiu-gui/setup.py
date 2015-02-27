@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 changelog = 'debian/changelog'
-files="'data/icons/tango/verifica96x96.png','data/96px-Document-open.svg.png', 'data/icons/tango/firma96x96.png', 'data/impostazioni96x96.png',  'data/icons/tango/smartcardsets96x96.png', 'data/verifica96x96.png', 'data/icons/tango/window-close-symbolic.png','data/fpiu.svg'"
+files=['data/icons/tango/verifica96x96.png','data/icons/tango/96px-Document-open.svg.png', 'data/icons/tango/firma96x96.png', 'data/icons/tango/impostazioni96x96.png',  'data/icons/tango/smartcardsets96x96.png', 'data/icons/tango/verifica96x96.png', 'data/icons/tango/window-close-symbolic.png','data/fpiu.svg']
 
 setup(name = "firmapiu-gui",
 	version = '0.4',
@@ -19,7 +19,7 @@ setup(name = "firmapiu-gui",
 				('share/icons/hicolor/192x192/apps/',
 					['data/fpiu.png']),
 				('share/firmapiu-gui',
-					[files]
+					files)
 			   ],
 	long_description  = "This provides gui to firmapiud daemon. The gui should be easy-to-use"
 )
