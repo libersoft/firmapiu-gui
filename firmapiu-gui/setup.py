@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 changelog = 'debian/changelog'
-files=['data/icons/tango/verifica96x96.png','data/96px-Document-open.svg.png',
+files="'data/icons/tango/verifica96x96.png','data/96px-Document-open.svg.png',
 'data/icons/tango/firma96x96.png', 'data/impostazioni96x96.png',
 'data/icons/tango/smartcardsets96x96.png', 'data/verifica96x96.png',
-'data/icons/tango/window-close-symbolic.png','data/fpiu.svg']
+'data/icons/tango/window-close-symbolic.png','data/fpiu.svg'"
 
 setup(name = "firmapiu-gui",
 	version = '0.4',
