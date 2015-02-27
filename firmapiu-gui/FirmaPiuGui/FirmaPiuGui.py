@@ -225,8 +225,8 @@ class LabelDND(QLabel):
 class MainWindow(QWidget):
 
     def uicreate(self):
-		iconpath = "../../../../../share/firmapiu-gui/data/icons/tango/"
-        windowicon = iconpath"fpiu.svg"
+        iconpath = "../../../../../share/firmapiu-gui/data/icons/tango/"
+        windowicon = iconpath,"fpiu.svg"
         self.setWindowIcon(QIcon(windowicon))
         #btnsize = QSize(125, 125)
         btnsize = iconsize = QSize(96, 96)
@@ -242,7 +242,7 @@ class MainWindow(QWidget):
 
 #       Definisco il bottone Firma
 #TODO: Icona del bottone
-        iconsign_file = "firma96x96.png"
+        iconsign_file = iconpath,"firma96x96.png"
         MainWindow.btn_signFile = QPushButton(QIcon(iconsign_file), '')
         MainWindow.btn_signFile.setIconSize(iconsize)
         MainWindow.btn_signFile.setFixedSize(btnsize)
@@ -251,7 +251,7 @@ class MainWindow(QWidget):
 
 #       Definisco il bottone FirmaCartella
 #TODO: Icona del bottone
-        iconsign_folder = "96px-Document-open.svg.png"
+        iconsign_folder = iconpath,"96px-Document-open.svg.png"
         MainWindow.btn_signFolder = QPushButton(QIcon(iconsign_folder), '')
         MainWindow.btn_signFolder.setFixedSize(btnsize)
         MainWindow.btn_signFolder.setIconSize(iconsize)
@@ -260,7 +260,7 @@ class MainWindow(QWidget):
 
 #       Definisco il bottone Verifica firma
 #TODO: Icona del bottone
-        iconver_file = "verifica96x96.png"
+        iconver_file = iconpath,"verifica96x96.png"
         MainWindow.btn_verFile = QPushButton(QIcon(iconver_file), '')
         MainWindow.btn_verFile.setIconSize(iconsize)
         MainWindow.btn_verFile.setFixedSize(btnsize)
@@ -276,7 +276,7 @@ class MainWindow(QWidget):
 
 #       Definisco il bottone Gestione PIN
 #TODO: Icona del bottone
-        icon_manage_pin = "impostazioni96x96.png"
+        icon_manage_pin = iconpath,"impostazioni96x96.png"
         MainWindow.btn_manage_pin = QPushButton(QIcon(icon_manage_pin), '')
         MainWindow.btn_manage_pin.setFixedSize(btnsize)
         MainWindow.btn_manage_pin.setIconSize(iconsize)
@@ -286,7 +286,7 @@ class MainWindow(QWidget):
 
 #       Definisco il bottone Riconosci SmartCard
 #TODO: Icona del bottone
-        icon_id_smartcard = "smartcardsets96x96.png"
+        icon_id_smartcard = iconpath,"smartcardsets96x96.png"
         MainWindow.btn_id_smartcard = QPushButton(QIcon(icon_id_smartcard), '')
         MainWindow.btn_id_smartcard.setFixedSize(btnsize)
         MainWindow.btn_id_smartcard.setIconSize(iconsize)
@@ -295,7 +295,7 @@ class MainWindow(QWidget):
 #TODO: Funzione che fa le cose
 
 #       Definisco il bottone Chiudi
-        icon_esc = "window-close-symbolic.png"
+        icon_esc = iconpath,"window-close-symbolic.png"
         MainWindow.btn_esc = QPushButton('')
         MainWindow.btn_esc.setIcon(QIcon(icon_esc))
         MainWindow.btn_esc.setIconSize(iconsize)
