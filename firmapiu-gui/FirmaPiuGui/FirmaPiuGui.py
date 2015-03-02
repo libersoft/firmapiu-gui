@@ -225,7 +225,7 @@ class LabelDND(QLabel):
 class MainWindow(QWidget):
 
     def uicreate(self):
-        iconpath = "../../../../../share/firmapiu-gui/data/icons/tango/"
+        iconpath = "../../../../../share/firmapiu-gui/data/icons/tango-like/"
         windowicon = iconpath,"fpiu.svg"
         self.setWindowIcon(QIcon(windowicon))
         #btnsize = QSize(125, 125)
