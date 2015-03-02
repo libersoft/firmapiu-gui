@@ -4,10 +4,11 @@ OPTIONS="-Djava.library.path=/usr/lib/jni -classpath /usr/share/java/bcprov.jar:
 FIRMAPIUDAEMON="java $OPTIONS firmapiud.FirmapiuD"
 if [ ! -z "$(jps|grep FirmapiuD)" ]
 then
-	exec $FIRMAPIUGUI;
+	$FIRMAPIUGUI;
 else
-	exec $FIRMAPIUDAEMON & 
-	exec $FIRMAPIUGUI;
+	$FIRMAPIUDAEMON & 
+	sleep 3
+	$FIRMAPIUGUI;
 
 fi
 

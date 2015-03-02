@@ -1,4 +1,14 @@
-firmapiu-gui (0.4) trusty; urgency=low
+firmapiu-gui (0.4ubuntu1) libersoft-devel; urgency=medium
+
+  * (Closes: #2060, #2061, #2062, #2064)
+  * Fixed verify function call
+  * Added button icons
+  * Fully working log area
+  * Fully working drag and drop
+
+ -- Valerio Baldisserotto <svalo@libersoft.it>  Mon, 02 Mar 2015 11:59:25 +0100
+
+firmapiu-gui (0.4) libersoft-devel; urgency=low
 
   * Initial release (Closes: #2066) 
 
