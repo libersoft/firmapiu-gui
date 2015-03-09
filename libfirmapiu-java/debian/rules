@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+export JAVA_HOME=/usr/lib/jvm/default-java
+export CLASSPATH=/usr/share/java/bcprov.jar:/usr/share/java/bcpkix.jar:/usr/share/java/unix.jar:/usr/share/java/hexdump.jar:/usr/share/java/dbus.jar
+export JNIDIR0=/usr/lib/jni
+
+
+%:
+	dh $@ --with javahelper
+
+override_jh_build:
+	jh_build --javacopts="-source 1.7" --javadoc-opts="-source 1.7" 
