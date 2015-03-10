@@ -1,4 +1,4 @@
-firmapiu-gui (0.4ubuntu1) libersoft-devel; urgency=medium
+firmapiu-gui (0.4ubuntu2) libersoft-devel; urgency=medium
 
   * (Closes: #2060, #2061, #2062, #2064)
   * Fixed verify function call

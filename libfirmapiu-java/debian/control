@@ -1,0 +1,26 @@
+Source: libfirmapiu-java
+Section: java
+Priority: optional
+Maintainer: Valerio Baldisserotto <svalo@libersoft.it>
+Build-Depends: debhelper (>= 9.0.0), javahelper (>=0.25), libbcpkix-java, libbcprov-java
+Build-Depends-Indep: default-jdk, default-jdk-doc
+Standards-Version: 3.9.5
+Homepage: http://www.libersoft.it
+#Vcs-Git: git://git.debian.org/collab-maint/libfirmapiu-java.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/libfirmapiu-java.git;a=summary
+
+Package: libfirmapiu-java
+Architecture: all
+Depends: ${java:Depends}, ${misc:Depends}
+Recommends: ${java:Recommends}
+Description: Library for firmapiud daemon
+ This library provides functions and (apis?) to the firmapiud daemon used to sign and verify files according to the italian legislation
+
+#Package: libfirmapiu-java-doc
+#Architecture: all
+#Section: doc
+#Depends: ${java:Depends}, ${misc:Depends}
+#Recommends: ${java:Recommends}
+#Description: Documentation for libfirmapiu-java 
+# Documentation for libfirmapiu-java
+
