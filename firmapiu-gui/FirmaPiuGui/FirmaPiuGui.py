@@ -7,8 +7,9 @@ from PyQt5.Qt import *
 
 
 class DbusCallDaemon:
-    fpiudaemon = QDBusInterface("it.libersoft.FirmapiuDInterface",
-                                "/it/libersoft/FirmapiuD", interface = 'it.libersoft.FirmapiuDInterface',
+    fpiudaemon = QDBusInterface("it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface",
+                                "/it/libersoft/firmapiud/FirmapiuD",
+                                interface = 'it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface',
                                 parent = None)
     def test_connection(self):
         status = QDBusInterface("it.libersoft.FirmapiuDInterface",
@@ -35,11 +36,14 @@ class DbusCallDaemon:
         if result.type() == 3:
             DialogFunctions.error_dialog('Errore', result.errorMessage())
         else:
-            DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Operazione eseguita, controlla i log per'
-                                                                   ' i dettagli')
             for i in range(len(filepath)):
-                ActionFunctions.write_log(ActionFunctions, 'Ok! Il file è stato salvato come ' +
-                                            reply.value()[filepath[i]])
+                if type(result.value()[filepath][i]) is str:
+#                DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Operazione eseguita, controlla i log per'
+#                                                                       ' i dettagli')
+#                    for i in range(len(filepath)):
+                    ActionFunctions.write_log(ActionFunctions, 'Ok! Il file è stato salvato come ' +
+                                              reply.value()[filepath[i]])
+
 
     def verify(self, filepath):
         result = self.fpiudaemon.call('verify', filepath)
