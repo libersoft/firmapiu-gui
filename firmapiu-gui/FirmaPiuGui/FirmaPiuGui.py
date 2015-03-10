@@ -36,14 +36,11 @@ class DbusCallDaemon:
         if result.type() == 3:
             DialogFunctions.error_dialog('Errore', result.errorMessage())
         else:
+            DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Operazione eseguita, controlla i log per'
+                                                                   ' i dettagli')
             for i in range(len(filepath)):
-                if type(result.value()[filepath][i]) is str:
-#                DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Operazione eseguita, controlla i log per'
-#                                                                       ' i dettagli')
-#                    for i in range(len(filepath)):
-                    ActionFunctions.write_log(ActionFunctions, 'Ok! Il file è stato salvato come ' +
-                                              reply.value()[filepath[i]])
-
+                ActionFunctions.write_log(ActionFunctions, 'Ok! Il file è stato salvato come ' +
+                                            reply.value()[filepath[i]])
 
     def verify(self, filepath):
         result = self.fpiudaemon.call('verify', filepath)
