@@ -1,0 +1,24 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+export JAVA_HOME=/usr/lib/jvm/default-java
+export CLASSPATH=/usr/share/java/bcprov.jar:/usr/share/java/bcpkix.jar:/usr/share/java/unix.jar:/usr/share/java/hexdump.jar:/usr/share/java/dbus.jar
+export JNIDIR0=/usr/lib/jni
+export GRADLE_USER_HOME=$(CURDIR)/.gradlehome
+
+DEB_GRADLE_OPTS := --offline
+
+%:
+	dh $@ --with javahelper
+
+override_dh_auto_build:
+	mkdir $(CURDIR)/.gradlehome
+	gradle $(DEB_GRADLE_OPTS) assemble 
+	gradle $(DEB_GRADLE_OPTS) javadoc
+
+override_dh_auto_clean:
+	dh_auto_clean
+	gradle $(DEB_GRADLE_OPTS) clean
+	rm -rf .gradle buildSrc/.gradle buildSrc/build $(CURDIR)/.gradlehome build 

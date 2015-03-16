@@ -1,0 +1,15 @@
+*.tar.gz
+*.deb
+*.dsc
+*.changes
+*.build
+*.log
+*.substvars
+*.upload
+firmapiu-gui/.pybuild
+firmapiu-gui/.pybuild
+firmapiu-gui/debian/firmapiu-gui
+firmapiu-gui/firmapiu_gui.egg-info
+firmapiu-gui/debian/firmapiu-gui.debhelper.log
+firmapiu-gui/debian/firmapiu-gui.substvars
+.*

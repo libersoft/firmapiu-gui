@@ -1,0 +1,10 @@
+#!/usr/bin/python3
+__author__ = 'svalo'
+import sys
+from FirmaPiuGui.FirmaPiuGui import *
+if __name__ == '__main__':
+    qt_app = QApplication(sys.argv)
+    app = MainWindow()
+    app.show()
+    qt_app.exec_()
+    qt_app.deleteLater()
