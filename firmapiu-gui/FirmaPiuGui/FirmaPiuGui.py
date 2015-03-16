@@ -14,7 +14,7 @@ class DbusCallDaemon:
     def test_connection(self):
         status = QDBusInterface("it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface",
                                 "/it/libersoft/firmapiud/FirmapiuD",
-                                interface = 'it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface',
+                                interface = 'org.freedesktop.DBus.Peer',
                                 parent = None).call('Ping')
         if status.type() == 3:
             DialogFunctions.error_dialog('Errore', 'Il demone non è attivo,\nnon sarà possibile effettuare\nopearazioni'
