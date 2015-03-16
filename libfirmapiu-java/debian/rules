@@ -17,7 +17,7 @@ DEB_GRADLE_OPTS := --offline
 
 override_dh_auto_build:
 	mkdir $(CURDIR)/.gradlehome
-	gradle $(DEB_GRADLE_OPTS) build 
+	gradle $(DEB_GRADLE_OPTS) assemble 
 	gradle $(DEB_GRADLE_OPTS) javadoc
 
 override_dh_auto_clean:
