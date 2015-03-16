@@ -8,6 +8,6 @@ Homepage: http://www.libesoft.it
 
 Package: firmapiu-daemon
 Architecture: all
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, libfirmapiu-java
 Description: Daemon providing DBus interface to libfirmapiu-java
  Daemon providing DBus interface to libfirmapiu-java 

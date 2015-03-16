@@ -5,6 +5,7 @@
 *.build
 *.log
 *.substvars
+*.upload
 firmapiu-gui/.pybuild
 firmapiu-gui/.pybuild
 firmapiu-gui/debian/firmapiu-gui

@@ -1,5 +1,6 @@
-firmapiu-daemon (01) libersoft-devel; urgency=low
+firmapiu-daemon (01ubuntu1) libersoft-devel; urgency=medium
 
-  * Initial Release.
+  * First release 
 
- -- Valerio Baldisserotto <svalo@libersoft.it>  Mon, 09 Mar 2015 20:27:51 +0100
+ -- Valerio Baldisserotto <svalo@libersoft.it>  Thu, 12 Mar 2015 17:58:52 +0100
+

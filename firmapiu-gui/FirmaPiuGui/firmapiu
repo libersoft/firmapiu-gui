@@ -1,7 +1,7 @@
 #!/bin/sh
-FIRMAPIUGUI="/usr/bin/firmapiu-gui"
-OPTIONS="-Djava.library.path=/usr/lib/jni -classpath /usr/share/java/bcprov.jar:/usr/share/java/bcpkix.jar:/usr/share/java/unix.jar:/usr/share/java/hexdump.jar:/usr/share/java/dbus.jar:/usr/share/java/firmapiud.jar:/usr/share/java/firmapiulib.jar"
-FIRMAPIUDAEMON="java $OPTIONS firmapiud.FirmapiuD"
+export FIRMAPIUGUI="/usr/bin/firmapiu-gui"
+export CLASSPATH="-Djava.library.path=/usr/lib/jni -classpath /usr/share/java/bcprov.jar:/usr/share/java/bcpkix.jar:/usr/share/java/unix.jar:/usr/share/java/hexdump.jar:/usr/share/java/dbus.jar:/usr/share/java/firmapiu-daemon.jar:/usr/share/java/libfirmapiu-java.jar"
+FIRMAPIUDAEMON="java it.libersoft.firmapiud.FirmapiuD"
 if [ ! -z "$(jps|grep FirmapiuD)" ]
 then
 	$FIRMAPIUGUI;

@@ -1,3 +1,9 @@
+firmapiu-gui (0.4ubuntu3) libersoft-devel; urgency=medium
+
+  * Changed DBus interface and method
+
+ -- Valerio Baldisserotto <svalo@libersoft.it>  Tue, 10 Mar 2015 08:28:28 +0100
+
 firmapiu-gui (0.4ubuntu2) libersoft-devel; urgency=medium
 
   * (Closes: #2060, #2061, #2062, #2064)

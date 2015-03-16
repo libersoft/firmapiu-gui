@@ -1,0 +1,9 @@
+Document: libfirmapiu-java
+Title: API JavaDoc for libfirmapiu-java
+Author: The authors of libfirmapiu-java
+Abstract: This is the API JavaDoc for libfirmapiu-java
+Section: Programming/Java
+
+Format: HTML
+Index: /usr/share/doc/libfirmapiu-java/api
+Files: /usr/share/doc/libfirmapiu-java/api/*.html
