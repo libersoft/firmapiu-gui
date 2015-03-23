@@ -1,3 +1,20 @@
+# Copyright (C) 2015 Valerio Baldisserotto <svalo[at]libersoft[dot]it”
+
+#This file is part of firmapiu-gui.
+#
+#    firmapiu-gui is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    firmapiu-gui is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with firmapiu-gui.  If not, see <http://www.gnu.org/licenses/>.
+
 #!/bin/sh
 export FIRMAPIUGUI="/usr/bin/firmapiu-gui"
 export CLASSPATH="-Djava.library.path=/usr/lib/jni -classpath /usr/share/java/bcprov.jar:/usr/share/java/bcpkix.jar:/usr/share/java/unix.jar:/usr/share/java/hexdump.jar:/usr/share/java/dbus.jar:/usr/share/java/firmapiu-daemon.jar:/usr/share/java/libfirmapiu-java.jar"
