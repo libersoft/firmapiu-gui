@@ -284,6 +284,7 @@ class MainWindow(QWidget):
         MainWindow.btn_verFile = QPushButton(QIcon(iconver_file), '')
         MainWindow.btn_verFile.setIconSize(iconsize)
         MainWindow.btn_verFile.setFixedSize(btnsize)
+	MainWindow.btn_verFile.setToolTip("Verfica la firma di un documento")
         MainWindow.btn_verFile.clicked.connect(ActionFunctions.ver_sign_file)
 
 #       Definisco il bottone VerificafirmaCartella
