@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # Copyright (C) 2015 Valerio Baldisserotto <svalo[at]libersoft[dot]it”
 
 #This file is part of firmapiu-gui.
@@ -16,7 +17,6 @@
 #    along with firmapiu-gui.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import sys
 import glob
