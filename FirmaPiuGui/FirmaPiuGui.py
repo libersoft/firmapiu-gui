@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# coding=utf-8
 # Copyright (C) 2015 Valerio Baldisserotto <svalo[at]libersoft[dot]it”
 
 #This file is part of firmapiu-gui.
@@ -17,7 +18,6 @@
 #    along with firmapiu-gui.  If not, see <http://www.gnu.org/licenses/>.
 
 
-# -*- coding: utf-8 -*-
 import sys
 import glob
 
@@ -148,12 +148,14 @@ class DialogFunctions(QWidget):
 
 
 class ActionFunctions(QWidget):
-    def sign_file(self, filelist=[]):
+    def sign_file(self, filelist=[], outdir=''):
         options = {}
+        options['outdir'] = outdir
         if not filelist:
             filelist = DialogFunctions.file_dialog(DialogFunctions(), 'sign')
         if filelist:
-            options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir')
+            if options['outdir'] == '':
+                options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir')
             if options['outdir'] != '':
                 options['pin'] = DialogFunctions.pin_dialog(DialogFunctions())
                 if not (options['pin'] is None):
@@ -238,7 +240,8 @@ class LabelDND(QLabel):
         else:
             pass
         if len(to_be_signed) > 0:
-            ActionFunctions.sign_file(ActionFunctions(), to_be_signed)
+            outdir = QFileInfo(urls[0].path()).canonicalPath()
+            ActionFunctions.sign_file(ActionFunctions(), to_be_signed, outdir)
         if len(path) > 0:
             ActionFunctions.sign_folder(ActionFunctions(), path[0])
 
@@ -284,7 +287,7 @@ class MainWindow(QWidget):
         MainWindow.btn_verFile = QPushButton(QIcon(iconver_file), '')
         MainWindow.btn_verFile.setIconSize(iconsize)
         MainWindow.btn_verFile.setFixedSize(btnsize)
-	MainWindow.btn_verFile.setToolTip("Verfica la firma di un documento")
+        MainWindow.btn_verFile.setToolTip("Verfica la firma di un documento")
         MainWindow.btn_verFile.clicked.connect(ActionFunctions.ver_sign_file)
 
 #       Definisco il bottone VerificafirmaCartella
