@@ -123,7 +123,7 @@ class DialogFunctions(QWidget):
         filelist = QFileDialog.getOpenFileNames(QFileDialog(), caption = caption, filter = filters)
         return filelist[0]
 
-    def folder_dialog(self, action):
+    def folder_dialog(self, action, default_path=''):
         filters = ''
         if action == 'sign':
             caption = 'Scegli la cartella da firmare:'
@@ -132,6 +132,8 @@ class DialogFunctions(QWidget):
             filters = 'Signed Files(*.p7m *.p7s)'
         elif action == 'outdir':
             caption = 'Scegli la cartella di destinazione'
+            folder = QFileDialog.getExistingDirectory(QFileDialog(), caption=caption, directory=default_path)
+            return folder
         else:
             DialogFunctions.error_dialog('Errore', 'Azione sconosciuta')
             return False
@@ -154,8 +156,9 @@ class ActionFunctions(QWidget):
         if not filelist:
             filelist = DialogFunctions.file_dialog(DialogFunctions(), 'sign')
         if filelist:
+            filepath = QFileInfo(filelist[0]).canonicalPath()
             if options['outdir'] == '':
-                options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir')
+                options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir', filepath)
             if options['outdir'] != '':
                 options['pin'] = DialogFunctions.pin_dialog(DialogFunctions())
                 if not (options['pin'] is None):
@@ -384,3 +387,9 @@ class MainWindow(QWidget):
         super().__init__()
         self.uicreate()
         DbusCallDaemon.test_connection(self)
+if __name__ == '__main__':
+    qt_app = QApplication(sys.argv)
+    app = MainWindow()
+    app.show()
+    qt_app.exec_()
+    qt_app.deleteLater()
