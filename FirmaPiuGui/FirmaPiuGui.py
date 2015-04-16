@@ -213,6 +213,9 @@ class LabelDND(QLabel):
         self.setFrameStyle(QFrame.StyledPanel)
         self.setFrameShadow(QFrame.Sunken)
         self.setAlignment(Qt.AlignCenter)
+        self.setToolTip('Trascina qua sopra i documenti che vuoi firmare.\n'
+                        'Se trascini una cartella, saranno firmati ciascuno dei file contenuti.\n'
+                        'Se trascini un file firmato, sarà verificato.')
 
     def dragEnterEvent(self, e):
 
@@ -331,7 +334,7 @@ class MainWindow(QWidget):
         MainWindow.btn_esc.clicked.connect(QCoreApplication.instance().quit)
 
 #       Definisco la Drag and Drop area
-        MainWindow.btn_dnd = LabelDND('Trascina qui per firmare\n(anche una cartella)\no per verificare un file', None)
+        MainWindow.btn_dnd = LabelDND('Trascina qui per firmare\n(anche cartelle intere)', None)
         MainWindow.btn_dnd.setMinimumSize(300, 100)
 
 
@@ -387,9 +390,3 @@ class MainWindow(QWidget):
         super().__init__()
         self.uicreate()
         DbusCallDaemon.test_connection(self)
-if __name__ == '__main__':
-    qt_app = QApplication(sys.argv)
-    app = MainWindow()
-    app.show()
-    qt_app.exec_()
-    qt_app.deleteLater()
