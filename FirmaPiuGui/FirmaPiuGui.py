@@ -202,6 +202,16 @@ class ActionFunctions(QWidget):
     def write_log(self, text):
         MainWindow.log_area.append(text)
 
+    def change_code(self, what, oldcode, newcode):
+
+    def verify_code(self, what, code):
+
+    def get_remainging_attempts(self, what):
+
+    def get_ATR(self, id):
+
+    def unlock_PKCS11_token(self, id):
+
     def __init__(self, parent = None):
         super(ActionFunctions, self).__init__(parent)
 
@@ -311,7 +321,7 @@ class MainWindow(QWidget):
         MainWindow.btn_manage_pin.setFixedSize(btnsize)
         MainWindow.btn_manage_pin.setIconSize(iconsize)
         MainWindow.btn_manage_pin.setToolTip("Permette di gestire il PIN (Cambio PIN/Sblocco PIN/Cambio PUK)")
-        MainWindow.btn_manage_pin.setDisabled(True)
+        MainWindow.btn_manage_pin.clicked.connect(ActionFunctions.change_code)
 #TODO: Funzione che fa le cose
 
 #       Definisco il bottone Riconosci SmartCard
@@ -321,7 +331,7 @@ class MainWindow(QWidget):
         MainWindow.btn_id_smartcard.setFixedSize(btnsize)
         MainWindow.btn_id_smartcard.setIconSize(iconsize)
         MainWindow.btn_id_smartcard.setToolTip("Riconosimento del modello di SmartCard")
-        MainWindow.btn_id_smartcard.setDisabled(True)
+        MainWindow.btn_id_smartcard.clicked.connect(ActionFunctions.get_ATR)
 #TODO: Funzione che fa le cose
 
 #       Definisco il bottone Chiudi
