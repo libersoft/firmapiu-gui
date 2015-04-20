@@ -25,5 +25,5 @@ if __name__ == '__main__':
     qt_app = QApplication(sys.argv)
     app = MainWindow()
     app.show()
-    qt_app.exec_()
+    qt_app.exec()
     qt_app.deleteLater()
