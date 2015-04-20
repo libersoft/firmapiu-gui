@@ -25,14 +25,15 @@ from PyQt5.Qt import *
 
 
 class DbusCallDaemon:
-    fpiudaemon = QDBusInterface("it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface",
-                                "/it/libersoft/firmapiud/FirmapiuD",
-                                interface = 'it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface',
-                                parent = None)
+    service = "it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface"
+    path = "/it/libersoft/firmapiud/FirmapiuD"
+    interface = 'it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface'
+
+    fpiudaemon = QDBusInterface(service, path, interface = interface, parent = None)
+
     def test_connection(self):
-        status = QDBusInterface("it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface",
-                                "/it/libersoft/firmapiud/FirmapiuD",
-                                interface = 'org.freedesktop.DBus.Peer',
+        interface = 'org.freedesktop.DBus.Peer'
+        status = QDBusInterface(DbusCallDaemon.interface , DbusCallDaemon.path , interface = interface,
                                 parent = None).call('Ping')
         if status.type() == 3:
             DialogFunctions.error_dialog('Errore', 'Il demone non è attivo,\nnon sarà possibile effettuare\nopearazioni'
