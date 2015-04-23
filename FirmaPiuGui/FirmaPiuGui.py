@@ -365,8 +365,8 @@ class MainWindow(QWidget):
         MainWindow.btn_manage_pin = QPushButton(QIcon(icon_manage_pin), '')
         MainWindow.btn_manage_pin.setFixedSize(btnsize)
         MainWindow.btn_manage_pin.setIconSize(iconsize)
-        MainWindow.btn_manage_pin.setToolTip("Permette di gestire il PIN (Cambio PIN/Sblocco PIN/Cambio PUK)")
-        MainWindow.btn_manage_pin.clicked.connect(ActionFunctions.change_code)
+        MainWindow.btn_manage_pin.setToolTip("Strumenti: Permette di gestire PIN e PUK\n(Cambio PIN/Sblocco PIN/Cambio PUK)")
+        MainWindow.btn_manage_pin.clicked.connect(ChangeCodes)
 #TODO: Funzione che fa le cose
 
 #       Definisco il bottone Riconosci SmartCard
