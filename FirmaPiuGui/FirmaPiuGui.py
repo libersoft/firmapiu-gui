@@ -204,14 +204,19 @@ class ActionFunctions(QWidget):
         MainWindow.log_area.append(text)
 
     def change_code(self, what, oldcode, newcode):
+        pass
 
     def verify_code(self, what, code):
+        pass
 
     def get_remainging_attempts(self, what):
+        pass
 
     def get_ATR(self, id):
+        pass
 
     def unlock_PKCS11_token(self, id):
+        pass
 
     def __init__(self, parent = None):
         super(ActionFunctions, self).__init__(parent)
