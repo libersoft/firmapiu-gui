@@ -267,6 +267,49 @@ class LabelDND(QLabel):
         if len(path) > 0:
             ActionFunctions.sign_folder(ActionFunctions(), path[0])
 
+class ChangeCodes(QDialog):
+
+    def __init__(self):
+        QDialog.__init__(self)
+
+        self.setWindowTitle('Operazioni su Pin e Puk')
+        self.pintext = QTextEdit(self)
+        self.pintext.setPlaceholderText('Pin')
+        self.pintext.setToolTip('Inserischi il Pin\nper cambiarlo o verificarlo')
+
+        self.btn_change_pin = QPushButton('Cambia Pin')
+        self.btn_change_pin.setToolTip('Cambia il Pin della smartcard')
+
+        self.btn_verify_pin = QPushButton('Verifica il Pin')
+        self.btn_verify_pin.setToolTip('Verifica la correttezza del Pin')
+
+
+        self.puktext = (QTextEdit(self))
+        self.puktext.setPlaceholderText('Puk')
+        self.puktext.setToolTip('Inserischi il Puk\nper cambiarlo o verificarlo')
+
+        self.btn_change_puk = QPushButton('Cambia Puk')
+        self.btn_change_puk.setToolTip('Cambia il Puk della smartcard')
+
+        self.btn_verify_puk = QPushButton('Verifica il Puk')
+        self.btn_verify_puk.setToolTip('Verifica la correttezza del Puk')
+
+        self.pin_layout = QHBoxLayout()
+        self.pin_layout.addWidget(self.pintext)
+        self.pin_layout.addWidget(self.btn_change_pin)
+        self.pin_layout.addWidget(self.btn_verify_pin)
+
+        self.puk_layout = QHBoxLayout()
+        self.puk_layout.addWidget(self.pintext)
+        self.puk_layout.addWidget(self.btn_change_puk)
+        self.puk_layout.addWidget(self.btn_verify_puk)
+
+        self.layout = QGridLayout()
+        self.layout.addLayout(self.pin_layout, 0, 0)
+        self.layout.addLayout(self.puk_layout, 1, 0)
+
+
+
 class MainWindow(QWidget):
 
     def uicreate(self):
