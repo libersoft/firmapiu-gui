@@ -329,7 +329,6 @@ class MainWindow(QWidget):
         action_label.setAlignment(Qt.AlignHCenter)
 
 #       Definisco il bottone Firma
-#TODO: Icona del bottone
         iconsign_file = iconpath+"firma96x96.png"
         MainWindow.btn_signFile = QPushButton(QIcon(iconsign_file), '')
         MainWindow.btn_signFile.setIconSize(iconsize)
@@ -338,7 +337,6 @@ class MainWindow(QWidget):
         MainWindow.btn_signFile.clicked.connect(ActionFunctions.sign_file)
 
 #       Definisco il bottone FirmaCartella
-#TODO: Icona del bottone
         iconsign_folder = iconpath+"96px-Document-open.svg.png"
         MainWindow.btn_signFolder = QPushButton(QIcon(iconsign_folder), '')
         MainWindow.btn_signFolder.setFixedSize(btnsize)
@@ -347,7 +345,6 @@ class MainWindow(QWidget):
         MainWindow.btn_signFolder.clicked.connect(ActionFunctions.sign_folder)
 
 #       Definisco il bottone Verifica firma
-#TODO: Icona del bottone
         iconver_file = iconpath+"verifica96x96.png"
         MainWindow.btn_verFile = QPushButton(QIcon(iconver_file), '')
         MainWindow.btn_verFile.setIconSize(iconsize)
@@ -364,7 +361,6 @@ class MainWindow(QWidget):
         MainWindow.btn_ver_folder.clicked.connect(ActionFunctions.ver_sign_folder)
 
 #       Definisco il bottone Gestione PIN
-#TODO: Icona del bottone
         icon_manage_pin = iconpath+"impostazioni96x96.png"
         MainWindow.btn_manage_pin = QPushButton(QIcon(icon_manage_pin), '')
         MainWindow.btn_manage_pin.setFixedSize(btnsize)
@@ -374,7 +370,6 @@ class MainWindow(QWidget):
 #TODO: Funzione che fa le cose
 
 #       Definisco il bottone Riconosci SmartCard
-#TODO: Icona del bottone
         icon_id_smartcard = iconpath+"smartcardsets96x96.png"
         MainWindow.btn_id_smartcard = QPushButton(QIcon(icon_id_smartcard), '')
         MainWindow.btn_id_smartcard.setFixedSize(btnsize)
