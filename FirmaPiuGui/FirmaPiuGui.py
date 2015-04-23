@@ -42,6 +42,7 @@ class DbusCallDaemon:
             MainWindow.btn_signFolder.setDisabled(True)
             MainWindow.btn_verFile.setDisabled(True)
             MainWindow.btn_ver_folder.setDisabled(True)
+            MainWindow.btn_manage_pin.setDisabled(True)
             MainWindow.btn_dnd.setAcceptDrops(False)
         else:
             pass
@@ -269,31 +270,50 @@ class LabelDND(QLabel):
             ActionFunctions.sign_folder(ActionFunctions(), path[0])
 
 class ChangeCodes(QDialog):
-
-    def __init__(self):
+    def PinWindow(self):
         QDialog.__init__(self)
-
+        
+        height=40
+        width = 100
+        verify_width = 130
+        
         self.setWindowTitle('Operazioni su Pin e Puk')
+        
         self.pintext = QTextEdit(self)
         self.pintext.setPlaceholderText('Pin')
-        self.pintext.setToolTip('Inserischi il Pin\nper cambiarlo o verificarlo')
+        self.pintext.setToolTip('Inserisci il Pin\nper cambiarlo o verificarlo')
+        self.pintext.setMaximumHeight(height)
+        self.pintext.setFixedWidth(width)
 
         self.btn_change_pin = QPushButton('Cambia Pin')
         self.btn_change_pin.setToolTip('Cambia il Pin della smartcard')
-
+        self.btn_change_pin.setMaximumHeight(height)
+        self.btn_change_pin.setFixedWidth(width)
+        
         self.btn_verify_pin = QPushButton('Verifica il Pin')
         self.btn_verify_pin.setToolTip('Verifica la correttezza del Pin')
-
+        self.btn_verify_pin.setMaximumHeight(height)
+        self.btn_verify_pin.setFixedWidth(verify_width)
 
         self.puktext = (QTextEdit(self))
         self.puktext.setPlaceholderText('Puk')
         self.puktext.setToolTip('Inserischi il Puk\nper cambiarlo o verificarlo')
+        self.puktext.setMaximumHeight(height)
+        self.puktext.setFixedWidth(width)
 
         self.btn_change_puk = QPushButton('Cambia Puk')
         self.btn_change_puk.setToolTip('Cambia il Puk della smartcard')
+        self.btn_change_puk.setMaximumHeight(height)
+        self.btn_change_puk.setFixedWidth(width)
 
         self.btn_verify_puk = QPushButton('Verifica il Puk')
         self.btn_verify_puk.setToolTip('Verifica la correttezza del Puk')
+        self.btn_verify_puk.setMaximumHeight(height)
+        self.btn_verify_puk.setFixedWidth(verify_width)
+
+        self.btn_esc = QPushButton('Esci')
+        self.btn_esc.setMaximumHeight(height)
+        self.btn_esc.clicked.connect(self.reject)
 
         self.pin_layout = QHBoxLayout()
         self.pin_layout.addWidget(self.pintext)
@@ -301,14 +321,25 @@ class ChangeCodes(QDialog):
         self.pin_layout.addWidget(self.btn_verify_pin)
 
         self.puk_layout = QHBoxLayout()
-        self.puk_layout.addWidget(self.pintext)
+        self.puk_layout.addWidget(self.puktext)
         self.puk_layout.addWidget(self.btn_change_puk)
         self.puk_layout.addWidget(self.btn_verify_puk)
+        
+        self.esc_layout = QHBoxLayout()
+        self.esc_layout.addWidget(self.btn_esc)
 
         self.layout = QGridLayout()
-        self.layout.addLayout(self.pin_layout, 0, 0)
-        self.layout.addLayout(self.puk_layout, 1, 0)
-
+        self.layout.addLayout(self.pin_layout, 1, 0)
+        self.layout.addLayout(self.puk_layout, 2, 0)
+        self.layout.addLayout(self.esc_layout, 3, 0)
+        self.setLayout(self.layout)
+        
+        self.exec_()
+        
+    def __init__(self):
+        global MainWindow
+        super().__init__()
+        ChangeCodes.PinWindow(self)
 
 
 class MainWindow(QWidget):
@@ -367,6 +398,7 @@ class MainWindow(QWidget):
         MainWindow.btn_manage_pin.setIconSize(iconsize)
         MainWindow.btn_manage_pin.setToolTip("Strumenti: Permette di gestire PIN e PUK\n(Cambio PIN/Sblocco PIN/Cambio PUK)")
         MainWindow.btn_manage_pin.clicked.connect(ChangeCodes)
+        
 #       Definisco il bottone Riconosci SmartCard
         icon_id_smartcard = iconpath+"smartcardsets96x96.png"
         MainWindow.btn_id_smartcard = QPushButton(QIcon(icon_id_smartcard), '')
@@ -397,7 +429,7 @@ class MainWindow(QWidget):
         MainWindow.log_area = QTextEdit()
         MainWindow.log_area.setReadOnly(True)
         MainWindow.log_area.setMinimumHeight(100)
-
+        
 #       Definisco il layout generale
 
         label_layout = QHBoxLayout()
