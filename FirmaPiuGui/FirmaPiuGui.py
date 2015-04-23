@@ -59,8 +59,8 @@ class DbusCallDaemon:
             DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Operazione eseguita, controlla i log per'
                                                                    ' i dettagli')
             for i in range(len(filepath)):
-                ActionFunctions.write_log(ActionFunctions, 'Ok! Il file è stato salvato come ' +
-                                            reply.value()[filepath[i]])
+                ActionFunctions.write_log(ActionFunctions, '<big>Ok!</big> Il file è stato salvato come ' +'<big>' +
+                                            reply.value()[filepath[i]]) + '</big>\n'
 
     def verify(self, filepath):
         result = self.fpiudaemon.call('verify', filepath)
@@ -68,7 +68,7 @@ class DbusCallDaemon:
         if result.type() == 3:
             DialogFunctions.error_dialog('Errore', result.errorMessage())
         else:
-            DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Operazione eseguita, controlla i log per'
+            DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Firma valida\ncontrolla il log per'
                                                                    ' i dettagli')
             for i in range(len(filepath)):
                 outstatus = reply.value()[filepath[i]]
@@ -76,7 +76,8 @@ class DbusCallDaemon:
                     exit_text = 'Firma legalmente valida'
                 else:
                     exit_text = outstatus.split(sep=':', maxsplit=1)[1]
-                ActionFunctions.write_log(ActionFunctions, filepath[i] + ': ' + exit_text)
+                text = '<big>' + filepath[i] + ': ' + exit_text + '</big>\n'
+                ActionFunctions.write_log(ActionFunctions, text)
 
     def __init__(self, action, filepath, options):
         if action == 'sign':
@@ -353,7 +354,6 @@ class MainWindow(QWidget):
         MainWindow.btn_verFile.clicked.connect(ActionFunctions.ver_sign_file)
 
 #       Definisco il bottone VerificafirmaCartella
-#TODO: Icona del bottone
         iconver_folder = ""
         MainWindow.btn_ver_folder = QPushButton(QIcon(iconver_folder), 'Verifica c&artella')
         MainWindow.btn_ver_folder.setFixedSize(btnsize)
@@ -367,8 +367,6 @@ class MainWindow(QWidget):
         MainWindow.btn_manage_pin.setIconSize(iconsize)
         MainWindow.btn_manage_pin.setToolTip("Strumenti: Permette di gestire PIN e PUK\n(Cambio PIN/Sblocco PIN/Cambio PUK)")
         MainWindow.btn_manage_pin.clicked.connect(ChangeCodes)
-#TODO: Funzione che fa le cose
-
 #       Definisco il bottone Riconosci SmartCard
         icon_id_smartcard = iconpath+"smartcardsets96x96.png"
         MainWindow.btn_id_smartcard = QPushButton(QIcon(icon_id_smartcard), '')
@@ -376,7 +374,6 @@ class MainWindow(QWidget):
         MainWindow.btn_id_smartcard.setIconSize(iconsize)
         MainWindow.btn_id_smartcard.setToolTip("Riconosimento del modello di SmartCard")
         MainWindow.btn_id_smartcard.clicked.connect(ActionFunctions.get_ATR)
-#TODO: Funzione che fa le cose
 
 #       Definisco il bottone Chiudi
         icon_esc = iconpath+"window-close-symbolic.png"
@@ -400,7 +397,6 @@ class MainWindow(QWidget):
         MainWindow.log_area = QTextEdit()
         MainWindow.log_area.setReadOnly(True)
         MainWindow.log_area.setMinimumHeight(100)
-
 
 #       Definisco il layout generale
 
@@ -439,6 +435,7 @@ class MainWindow(QWidget):
         main_layout.addLayout(btn_layout_dnd, 4, 0)
         main_layout.addLayout(log_area_layout, 5, 0)
         self.setLayout(main_layout)
+
 
     def __init__(self):
         super().__init__()
