@@ -115,22 +115,25 @@ class DialogFunctions(QWidget):
     def info_dialog(self, caption, text):
         QMessageBox.information(QMessageBox(), caption, text)
 
-    def pin_dialog(self):
+    def code_dialog(self, what):
         """
 
+
+        :param what:
         :rtype : str
         """
-        pinlen = 8
-        pin = QInputDialog.getText(QInputDialog(), 'Inserisci il PIN', 'Inserisci il PIN della smartcard',
+        code_min_len = 5
+        code_max_len = 8
+        code = QInputDialog.getText(QInputDialog(), 'Inserisci il '+what, 'Inserisci il '+what+' della smartcard',
                                    QLineEdit.Password)
-        if pin[1]:
-            if len(pin[0]) == pinlen:
-                return pin[0]
+        if code[1]:
+            if code_min_len <= len(code[0]) <= code_max_len:
+                return code[0]
             else:
-                DialogFunctions.error_dialog('PIN errato', 'Il PIN *deve* essere lungo '
-                                             + str(pinlen) + ' caratteri')
-                pin = DialogFunctions.pin_dialog(DialogFunctions())
-                return pin
+                DialogFunctions.error_dialog(what+' errato', 'Il '+what+ '<b>deve</b> essere compreso fra '
+                                             + str(code_min_len) + ' e '  + str(code_max_len) + ' caratteri')
+                code = DialogFunctions.code_dialog(what)
+                return code
         else:
             DialogFunctions.error_dialog('Errore',
                                          'L\'azione non è stata completata a causa dell\'interruzione dell\'utente')
@@ -185,7 +188,7 @@ class ActionFunctions(QWidget):
             if options['outdir'] == '':
                 options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir', filepath)
             if options['outdir'] != '':
-                options['pin'] = DialogFunctions.pin_dialog(DialogFunctions())
+                options['pin'] = DialogFunctions.code_dialog('Pin')
                 if not (options['pin'] is None):
                     DbusCallDaemon('sign', filelist, options)
             else:
@@ -206,7 +209,7 @@ class ActionFunctions(QWidget):
         if (len(files) > 0):
             options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir')
             if options['outdir'] != '':
-                options['pin'] = DialogFunctions.pin_dialog(DialogFunctions())
+                options['pin'] = DialogFunctions.code_dialog('Pin')
                 DbusCallDaemon('sign', files, options)
         else:
             DialogFunctions.error_dialog("Nessun file", "La cartella selezionata non contiene nessun"
