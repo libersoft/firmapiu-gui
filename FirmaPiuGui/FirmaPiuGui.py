@@ -115,7 +115,7 @@ class DialogFunctions(QWidget):
     def info_dialog(self, caption, text):
         QMessageBox.information(QMessageBox(), caption, text)
 
-    def code_dialog(self, what):
+    def code_dialog(what):
         """
 
 
@@ -130,7 +130,7 @@ class DialogFunctions(QWidget):
             if code_min_len <= len(code[0]) <= code_max_len:
                 return code[0]
             else:
-                DialogFunctions.error_dialog(what+' errato', 'Il '+what+ '<b>deve</b> essere compreso fra '
+                DialogFunctions.error_dialog(what+' errato', 'Il '+what+ ' <b>deve</b> essere compreso fra '
                                              + str(code_min_len) + ' e '  + str(code_max_len) + ' caratteri')
                 code = DialogFunctions.code_dialog(what)
                 return code
