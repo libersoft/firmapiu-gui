@@ -30,6 +30,7 @@ class DbusCallDaemon:
     interface = 'it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface'
 
     fpiudaemon = QDBusInterface(service, path, interface = interface, parent = None)
+    fpiudaemon.setTimeout(120000)
 
     def test_connection(self):
         interface = 'org.freedesktop.DBus.Peer'
