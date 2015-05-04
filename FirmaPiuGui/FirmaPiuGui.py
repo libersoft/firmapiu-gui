@@ -58,11 +58,20 @@ class DbusCallDaemon:
         if result.type() == 3:
             DialogFunctions.error_dialog('Errore', result.errorMessage())
         else:
-            DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Operazione eseguita, controlla i log per'
-                                                                   ' i dettagli')
+            #TODO lo vogliamo sto messaggio?
+            #DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Operazione conclusa, controlla i log per'
+            #                                                       ' i dettagli')
             for i in range(len(filepath)):
-                ActionFunctions.write_log(ActionFunctions, '<big>Ok!</big> Il file è stato salvato come ' +'<big>' +
-                                            reply.value()[filepath[i]]) + '</big>\n'
+                if (type (reply.value()[filepath[i]]) is str):
+                    #todo dai il nome del file sorgente
+                    MainWindow.log_area.append('<big>Ok!</big> Il file è stato salvato come ' +'<big>' +
+                                                reply.value()[filepath[i]] + '</big>\n\n')
+                else:
+                    MainWindow.log_area.append('<big>Errore</big>, il documento ' +  filepath[i] +
+                                               ' non è stato firmato')
+                    print ('ugo')
+                    DialogFunctions.error_dialog('Errore', 'Errore ' + str(reply.value()[filepath[i]][0]) + ':\n'
+                                                 + reply.value()[filepath[i]][1] + '\n\n')
 
     def verify(self, filepath):
         result = self.fpiudaemon.call('verify', filepath)
@@ -383,73 +392,73 @@ class MainWindow(QWidget):
 
 
 #       Definisco la label per le azioni
-        action_label = QLabel("Scegli l'azione da effettuare:")
-        action_label.setAlignment(Qt.AlignHCenter)
+        self.action_label = QLabel("Scegli l'azione da effettuare:")
+        self.action_label.setAlignment(Qt.AlignHCenter)
 
 #       Definisco il bottone Firma
         iconsign_file = iconpath+"firma96x96.png"
-        MainWindow.btn_signFile = QPushButton(QIcon(iconsign_file), '')
-        MainWindow.btn_signFile.setIconSize(iconsize)
-        MainWindow.btn_signFile.setFixedSize(btnsize)
-        MainWindow.btn_signFile.setToolTip("Firma un documento")
-        MainWindow.btn_signFile.clicked.connect(ActionFunctions.sign_file)
+        self.btn_signFile = QPushButton(QIcon(iconsign_file), '')
+        self.btn_signFile.setIconSize(iconsize)
+        self.btn_signFile.setFixedSize(btnsize)
+        self.btn_signFile.setToolTip("Firma un documento")
+        self.btn_signFile.clicked.connect(ActionFunctions.sign_file)
 
 #       Definisco il bottone FirmaCartella
         iconsign_folder = iconpath+"96px-Document-open.svg.png"
-        MainWindow.btn_signFolder = QPushButton(QIcon(iconsign_folder), '')
-        MainWindow.btn_signFolder.setFixedSize(btnsize)
-        MainWindow.btn_signFolder.setIconSize(iconsize)
-        MainWindow.btn_signFolder.setToolTip("Firma tutti i documenti di una cartella")
-        MainWindow.btn_signFolder.clicked.connect(ActionFunctions.sign_folder)
+        self.btn_signFolder = QPushButton(QIcon(iconsign_folder), '')
+        self.btn_signFolder.setFixedSize(btnsize)
+        self.btn_signFolder.setIconSize(iconsize)
+        self.btn_signFolder.setToolTip("Firma tutti i documenti di una cartella")
+        self.btn_signFolder.clicked.connect(ActionFunctions.sign_folder)
 
 #       Definisco il bottone Verifica firma
         iconver_file = iconpath+"verifica96x96.png"
-        MainWindow.btn_verFile = QPushButton(QIcon(iconver_file), '')
-        MainWindow.btn_verFile.setIconSize(iconsize)
-        MainWindow.btn_verFile.setFixedSize(btnsize)
-        MainWindow.btn_verFile.setToolTip("Verfica la firma di un documento")
-        MainWindow.btn_verFile.clicked.connect(ActionFunctions.ver_sign_file)
+        self.btn_verFile = QPushButton(QIcon(iconver_file), '')
+        self.btn_verFile.setIconSize(iconsize)
+        self.btn_verFile.setFixedSize(btnsize)
+        self.btn_verFile.setToolTip("Verfica la firma di un documento")
+        self.btn_verFile.clicked.connect(ActionFunctions.ver_sign_file)
 
 #       Definisco il bottone VerificafirmaCartella
         iconver_folder = ""
-        MainWindow.btn_ver_folder = QPushButton(QIcon(iconver_folder), 'Verifica c&artella')
-        MainWindow.btn_ver_folder.setFixedSize(btnsize)
-        MainWindow.btn_ver_folder.setToolTip("Verifica la firma di tutti i documenti di una cartella")
-        MainWindow.btn_ver_folder.clicked.connect(ActionFunctions.ver_sign_folder)
+        self.btn_ver_folder = QPushButton(QIcon(iconver_folder), 'Verifica c&artella')
+        self.btn_ver_folder.setFixedSize(btnsize)
+        self.btn_ver_folder.setToolTip("Verifica la firma di tutti i documenti di una cartella")
+        self.btn_ver_folder.clicked.connect(ActionFunctions.ver_sign_folder)
 
 #       Definisco il bottone Gestione PIN
         icon_manage_pin = iconpath+"impostazioni96x96.png"
-        MainWindow.btn_manage_pin = QPushButton(QIcon(icon_manage_pin), '')
-        MainWindow.btn_manage_pin.setFixedSize(btnsize)
-        MainWindow.btn_manage_pin.setIconSize(iconsize)
-        MainWindow.btn_manage_pin.setToolTip("Strumenti: Permette di gestire PIN e PUK\n(Cambio PIN/Sblocco PIN/Cambio PUK)")
-        MainWindow.btn_manage_pin.clicked.connect(ChangeCodes)
+        self.btn_manage_pin = QPushButton(QIcon(icon_manage_pin), '')
+        self.btn_manage_pin.setFixedSize(btnsize)
+        self.btn_manage_pin.setIconSize(iconsize)
+        self.btn_manage_pin.setToolTip("Strumenti: Permette di gestire PIN e PUK\n(Cambio PIN/Sblocco PIN/Cambio PUK)")
+        self.btn_manage_pin.clicked.connect(ChangeCodes)
         
 #       Definisco il bottone Riconosci SmartCard
         icon_id_smartcard = iconpath+"smartcardsets96x96.png"
-        MainWindow.btn_id_smartcard = QPushButton(QIcon(icon_id_smartcard), '')
-        MainWindow.btn_id_smartcard.setFixedSize(btnsize)
-        MainWindow.btn_id_smartcard.setIconSize(iconsize)
-        MainWindow.btn_id_smartcard.setToolTip("Riconosimento del modello di SmartCard")
-        MainWindow.btn_id_smartcard.clicked.connect(ActionFunctions.get_ATR)
+        self.btn_id_smartcard = QPushButton(QIcon(icon_id_smartcard), '')
+        self.btn_id_smartcard.setFixedSize(btnsize)
+        self.btn_id_smartcard.setIconSize(iconsize)
+        self.btn_id_smartcard.setToolTip("Riconosimento del modello di SmartCard")
+        self.btn_id_smartcard.clicked.connect(ActionFunctions.get_ATR)
 
 #       Definisco il bottone Chiudi
         icon_esc = iconpath+"window-close-symbolic.png"
-        MainWindow.btn_esc = QPushButton('')
-        MainWindow.btn_esc.setIcon(QIcon(icon_esc))
-        MainWindow.btn_esc.setIconSize(iconsize)
-        MainWindow.btn_esc.setFixedSize(btnsize)
-        MainWindow.btn_esc.setToolTip("Chiude l'applicazione")
-        MainWindow.btn_esc.clicked.connect(QCoreApplication.instance().quit)
+        self.btn_esc = QPushButton('')
+        self.btn_esc.setIcon(QIcon(icon_esc))
+        self.btn_esc.setIconSize(iconsize)
+        self.btn_esc.setFixedSize(btnsize)
+        self.btn_esc.setToolTip("Chiude l'applicazione")
+        self.btn_esc.clicked.connect(QCoreApplication.instance().quit)
 
 #       Definisco la Drag and Drop area
-        MainWindow.btn_dnd = LabelDND('Trascina qui per firmare\n(anche cartelle intere)', None)
-        MainWindow.btn_dnd.setMinimumSize(300, 100)
+        self.btn_dnd = LabelDND('Trascina qui per firmare\n(anche cartelle intere)', None)
+        self.btn_dnd.setMinimumSize(300, 100)
 
 
 #       Definisco la label per il log
-        log_label = QLabel("Area di log:")
-        log_label.setAlignment(Qt.AlignHCenter)
+        self.log_label = QLabel("Area di log:")
+        self.log_label.setAlignment(Qt.AlignHCenter)
 
 #       Definisco la log area
         MainWindow.log_area = QTextEdit()
@@ -458,41 +467,41 @@ class MainWindow(QWidget):
         
 #       Definisco il layout generale
 
-        label_layout = QHBoxLayout()
-        label_layout.addWidget(action_label)
+        self.label_layout = QHBoxLayout()
+        self.label_layout.addWidget(self.action_label)
 
-        btn_layout_1_row = QHBoxLayout()
-        btn_layout_1_row.addWidget(MainWindow.btn_signFile)
-        btn_layout_1_row.addWidget(MainWindow.btn_signFolder)
-        btn_layout_1_row.addWidget(MainWindow.btn_verFile)
+        self.btn_layout_1_row = QHBoxLayout()
+        self.btn_layout_1_row.addWidget(self.btn_signFile)
+        self.btn_layout_1_row.addWidget(self.btn_signFolder)
+        self.btn_layout_1_row.addWidget(self.btn_verFile)
 
-        btn_layout_2_row = QHBoxLayout()
-#        btn_layout_2_row.addWidget(MainWindow.btn_ver_folder)
-        btn_layout_2_row.addWidget(MainWindow.btn_manage_pin)
-        btn_layout_2_row.addWidget(MainWindow.btn_id_smartcard)
-        btn_layout_2_row.addWidget(MainWindow.btn_esc)
+        self.btn_layout_2_row = QHBoxLayout()
+#        self.btn_layout_2_row.addWidget(self.btn_ver_folder)
+        self.btn_layout_2_row.addWidget(self.btn_manage_pin)
+        self.btn_layout_2_row.addWidget(self.btn_id_smartcard)
+        self.btn_layout_2_row.addWidget(self.btn_esc)
 
 #        btn_layout_3_row = QHBoxLayout()
-#        btn_layout_3_row.addWidget(MainWindow.btn_esc)
-#        btn_layout_3_row.addWidget(MainWindow.btn_esc)
-#        btn_layout_3_row.addWidget(MainWindow.btn_esc)
+#        btn_layout_3_row.addWidget(self.btn_esc)
+#        btn_layout_3_row.addWidget(self.btn_esc)
+#        btn_layout_3_row.addWidget(self.btn_esc)
 
-        log_area_layout = QVBoxLayout()
-        log_area_layout.addWidget(log_label)
-        log_area_layout.addWidget(MainWindow.log_area)
+        self.log_area_layout = QVBoxLayout()
+        self.log_area_layout.addWidget(self.log_label)
+        self.log_area_layout.addWidget(self.log_area)
 
-        btn_layout_dnd = QHBoxLayout()
-        btn_layout_dnd.addWidget(MainWindow.btn_dnd)
+        self.btn_layout_dnd = QHBoxLayout()
+        self.btn_layout_dnd.addWidget(self.btn_dnd)
 
 #       Imposta il layout della finestra
-        main_layout = QGridLayout()
-        main_layout.addLayout(label_layout, 0, 0)
-        main_layout.addLayout(btn_layout_1_row, 1, 0)
-        main_layout.addLayout(btn_layout_2_row, 2, 0)
+        self.main_layout = QGridLayout()
+        self.main_layout.addLayout(self.label_layout, 0, 0)
+        self.main_layout.addLayout(self.btn_layout_1_row, 1, 0)
+        self.main_layout.addLayout(self.btn_layout_2_row, 2, 0)
         #main_layout.addLayout(btn_layout_3_row, 3, 0)
-        main_layout.addLayout(btn_layout_dnd, 4, 0)
-        main_layout.addLayout(log_area_layout, 5, 0)
-        self.setLayout(main_layout)
+        self.main_layout.addLayout(self.btn_layout_dnd, 4, 0)
+        self.main_layout.addLayout(self.log_area_layout, 5, 0)
+        self.setLayout(self.main_layout)
 
 
     def __init__(self):
