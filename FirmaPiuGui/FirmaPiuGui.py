@@ -87,9 +87,25 @@ class DbusCallDaemon:
                     exit_text = 'Firma legalmente valida'
                 else:
                     exit_text = outstatus.split(sep=':', maxsplit=1)[1]
-                text = '<big>' + filepath[i] + ': ' + exit_text + '</big>\n'
+                text = '<p><font color="red">' + filepath[i] + ': <big>' + exit_text + '</big></font></p>'
                 ActionFunctions.write_log(ActionFunctions, text)
 
+    def verifySingle(self, filepath, options):
+        result = self.fpiudaemon.call('verifySingle', QDBusVariant(filepath), options)
+        reply = QDBusReply(result)
+        if result.type() == 3:
+            DialogFunctions.error_dialog('Errore', result.errorMessage())
+        else:
+            DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Firma valida\ncontrolla il log per'
+                                                                   ' i dettagli')
+            for i in range(len(filepath)):
+                outstatus = reply.value()[filepath[i]]
+                if outstatus.split(sep=':', maxsplit=1)[1] == ' true':
+                    exit_text = 'Firma legalmente valida'
+                else:
+                    exit_text = outstatus.split(sep=':', maxsplit=1)[1]
+                text = '<p><font color="red">' + filepath[i] + ': <big>' + exit_text + '</big></font></p>'
+                ActionFunctions.write_log(ActionFunctions, text)
     def pin_puk_ops(self, what, code, newcode=None):
         '''
         pin_puk_ops must be called with Pin or Puk case sensitive
@@ -117,6 +133,8 @@ class DbusCallDaemon:
             self.sign(filepath, options)
         elif action == 'verify':
             self.verify(filepath)
+        elif action == 'verifySingle':
+            self.verifySingle(filepath, options)
         else:
             print('Opzione non riconosciuta')
 
@@ -152,14 +170,17 @@ class DialogFunctions(QWidget):
         filters = ''
         if action == 'sign':
             caption = 'Scegli il file da firmare:'
+            filelist = QFileDialog.getOpenFileNames(QFileDialog(), caption = caption, filter = filters)
+            return filelist[0]
         elif action == 'verify':
             caption = 'Scegli il file da verificare:'
             filters = 'Signed Files(*.p7m *.p7s)'
+            file = QFileDialog.getOpenFileName(QFileDialog(), caption = caption, filter = filters)
+            return file[0]
         else:
             DialogFunctions.error_dialog('Errore', 'Azione sconosciuta')
             return False
-        filelist = QFileDialog.getOpenFileNames(QFileDialog(), caption = caption, filter = filters)
-        return filelist[0]
+
 
     def folder_dialog(self, action, default_path=''):
         filters = ''
@@ -200,16 +221,18 @@ class ActionFunctions(QWidget):
             if options['outdir'] != '':
                 options['pin'] = DialogFunctions.code_dialog('Pin')
                 if not (options['pin'] is None):
+                    MainWindow.log_area.append('Ciccio')
                     DbusCallDaemon('sign', filelist, options)
             else:
                 DialogFunctions.error_dialog('Errore', 'Selezionare una cartella di destinazione '
                                                        'per il file firmato')
 
 
-    def ver_sign_file(self, filelist=[]):
-        if filelist == []:
-            filelist = DialogFunctions.file_dialog(DialogFunctions(), 'verify')
-        DbusCallDaemon('verify', filelist, '')
+    def ver_sign_file(self, file=''):
+        options = {}
+        if file == '':
+            file = DialogFunctions.file_dialog(DialogFunctions(), 'verify')
+        DbusCallDaemon('verifySingle', file, options)
 
     def sign_folder(self, folder=[]):
         options = {}
@@ -292,7 +315,7 @@ class LabelDND(QLabel):
                 to_be_signed.append(urls[i].toLocalFile())
 
         if len(to_be_checked) == 1:
-            ActionFunctions.ver_sign_file(ActionFunctions(), to_be_checked)
+            ActionFunctions.ver_sign_file(ActionFunctions(), to_be_checked[0])
         elif len(to_be_checked) > 1:
             to_be_signed.append(to_be_checked)
             DialogFunctions.info_dialog(DialogFunctions(), 'Attenzione', 'Stai per firmare un documento già firmato')
