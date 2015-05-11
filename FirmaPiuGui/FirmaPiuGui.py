@@ -100,18 +100,22 @@ class DbusCallDaemon:
         result = fpiudaemon.call('verifySingle', QDBusVariant(filepath), options )
         reply = QDBusReply(result)
         if result.type() == 3:
+            text = '<p>Il file <big>' + filepath + ' NON </big> è un file p7m valido </p>'
+            ActionFunctions.write_log(ActionFunctions, text)
             DialogFunctions.error_dialog('Errore', result.errorMessage())
         else:
-            DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Firma valida\ncontrolla il log per'
-                                                                   ' i dettagli')
-            for i in range(len(filepath)):
-                outstatus = reply.value()[filepath[i]]
-                if outstatus.split(sep=':', maxsplit=1)[1] == ' true':
-                    exit_text = 'Firma legalmente valida'
-                else:
-                    exit_text = outstatus.split(sep=':', maxsplit=1)[1]
-                text = '<p><font color="red">' + filepath[i] + ': <big>' + exit_text + '</big></font></p>'
+            legal = reply.value()[0]['legallysigned']
+            tech = reply.value()[0]['oksigned']
+            if legal and tech:
+                text = '<p>Il file <big>' + filepath + '</big> risulta legalmente e tecnicamente valido</p>'
                 ActionFunctions.write_log(ActionFunctions, text)
+                DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Firma legalmente e tecnicamente valida,'
+                                                                       '\ncontrolla il log per i dettagli')
+            else :
+                text = '<p>Il file <big>' + filepath + ' NON </big> è un file p7m valido </p>'
+                ActionFunctions.write_log(ActionFunctions, text)
+                DialogFunctions.error_dialog('Errore', 'Il file <big>non</big> è legalmente e tecnicamente valido')
+
     def pin_puk_ops(self, what, code, newcode=None):
         '''
         pin_puk_ops must be called with Pin or Puk case sensitive
@@ -238,7 +242,8 @@ class ActionFunctions(QWidget):
         options = {}
         if file == '':
             file = DialogFunctions.file_dialog(DialogFunctions(), 'verify')
-        DbusCallDaemon('verifySingle', file, options)
+        if file != '':
+            DbusCallDaemon('verifySingle', file, options)
 
     def sign_folder(self, folder=[]):
         options = {}
