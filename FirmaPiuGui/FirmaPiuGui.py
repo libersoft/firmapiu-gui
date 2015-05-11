@@ -36,12 +36,13 @@ class DbusCallDaemon:
         if status.type() == 3:
             DialogFunctions.error_dialog('Errore', 'Il demone non è attivo,\nnon sarà possibile effettuare\nopearazioni'
                                                    ' che utilizzino la smartcard.')
-            MainWindow.btn_signFile.setDisabled(True)
-            MainWindow.btn_signFolder.setDisabled(True)
-            MainWindow.btn_verFile.setDisabled(True)
-            MainWindow.btn_ver_folder.setDisabled(True)
-            MainWindow.btn_manage_pin.setDisabled(True)
-            MainWindow.btn_dnd.setAcceptDrops(False)
+
+            self.btn_signFile.setDisabled(True)
+            self.btn_signFolder.setDisabled(True)
+            self.btn_verFile.setDisabled(True)
+            self.btn_ver_folder.setDisabled(True)
+            self.btn_manage_pin.setDisabled(True)
+            self.btn_dnd.setAcceptDrops(False)
         else:
             pass
 
@@ -461,7 +462,8 @@ class MainWindow(QWidget):
         self.btn_manage_pin.setIconSize(iconsize)
         self.btn_manage_pin.setToolTip("Strumenti: Permette di gestire PIN e PUK\n(Cambio PIN/Sblocco PIN/Cambio PUK)")
         self.btn_manage_pin.clicked.connect(ChangeCodes)
-        
+        self.btn_manage_pin.setDisabled(True)
+
 #       Definisco il bottone Riconosci SmartCard
         icon_id_smartcard = iconpath+"smartcardsets96x96.png"
         self.btn_id_smartcard = QPushButton(QIcon(icon_id_smartcard), '')
@@ -469,6 +471,7 @@ class MainWindow(QWidget):
         self.btn_id_smartcard.setIconSize(iconsize)
         self.btn_id_smartcard.setToolTip("Riconosimento del modello di SmartCard")
         self.btn_id_smartcard.clicked.connect(ActionFunctions.get_ATR)
+        self.btn_id_smartcard.setDisabled(True)
 
 #       Definisco il bottone Chiudi
         icon_esc = iconpath+"window-close-symbolic.png"
@@ -491,8 +494,9 @@ class MainWindow(QWidget):
 #       Definisco la log area
         MainWindow.log_area = QTextEdit()
         MainWindow.log_area.setReadOnly(True)
+        MainWindow.log_area.setAcceptRichText(True)
         MainWindow.log_area.setMinimumHeight(100)
-        
+
 #       Definisco il layout generale
 
         self.label_layout = QHBoxLayout()
