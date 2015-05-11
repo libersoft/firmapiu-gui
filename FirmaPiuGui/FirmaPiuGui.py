@@ -393,7 +393,7 @@ class ChangeCodes(QDialog):
         self.puk_layout.addWidget(self.puktext)
         self.puk_layout.addWidget(self.btn_change_puk)
         self.puk_layout.addWidget(self.btn_verify_puk)
-        
+
         self.esc_layout = QHBoxLayout()
         self.esc_layout.addWidget(self.btn_esc)
 
@@ -402,18 +402,25 @@ class ChangeCodes(QDialog):
         self.layout.addLayout(self.puk_layout, 2, 0)
         self.layout.addLayout(self.esc_layout, 3, 0)
         self.setLayout(self.layout)
-        
+
+
+        #self.pintext.testo_cambiato.connect(self.testsignal)
+        #self.pintext.textChanged.connect(self.pintext.testo_cambiato.emit)
+
+
         self.exec_()
-        
+
+
     def __init__(self):
-        global MainWindow
         super().__init__()
-        ChangeCodes.PinWindow(self)
+        self.pinWindow()
 
 
 class MainWindow(QWidget):
 
     def uicreate(self):
+        QWidget.__init__(self)
+
         iconpath = sys.exec_prefix+ "/share/firmapiu-gui/data/icons/tango-like/"
         windowicon = iconpath+"fpiu.svg"
         self.setWindowIcon(QIcon(windowicon))
