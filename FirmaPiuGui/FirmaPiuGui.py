@@ -230,8 +230,7 @@ class ActionFunctions(QWidget):
                 options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir', filepath)
             if options['outdir'] != '':
                 options['pin'] = DialogFunctions.code_dialog('Pin')
-                if not (options['pin'] is None):
-                    MainWindow.log_area.append('Ciccio')
+                if (options['pin']):
                     DbusCallDaemon('sign', filelist, options)
             else:
                 DialogFunctions.error_dialog('Errore', 'Selezionare una cartella di destinazione '
