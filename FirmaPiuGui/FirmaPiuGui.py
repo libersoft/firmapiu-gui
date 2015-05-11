@@ -29,9 +29,6 @@ class DbusCallDaemon:
     path = "/it/libersoft/firmapiud/FirmapiuD"
     interface = 'it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface'
 
-    fpiudaemon = QDBusInterface(service, path, interface = interface, parent = None)
-    fpiudaemon.setTimeout(120000)
-
     def test_connection(self):
         interface = 'org.freedesktop.DBus.Peer'
         status = QDBusInterface(DbusCallDaemon.interface , DbusCallDaemon.path , interface = interface,
@@ -53,7 +50,9 @@ class DbusCallDaemon:
 
         :type options: dict
         """
-        result = self.fpiudaemon.call('sign', filepath, options)
+        fpiudaemon = QDBusInterface(self.service, self.path, interface = self.interface,
+                                    parent = None).setTimeout(120000)
+        result = fpiudaemon.call('sign', filepath, options)
         reply = QDBusReply(result)
         if result.type() == 3:
             DialogFunctions.error_dialog('Errore', result.errorMessage())
@@ -74,7 +73,9 @@ class DbusCallDaemon:
                                                  + reply.value()[filepath[i]][1] + '\n\n')
 
     def verify(self, filepath):
-        result = self.fpiudaemon.call('verify', filepath)
+        fpiudaemon = QDBusInterface(self.service, self.path, interface = self.interface,
+                                    parent = None).setTimeout(120000)
+        result = fpiudaemon.call('verify', filepath)
         reply = QDBusReply(result)
         if result.type() == 3:
             DialogFunctions.error_dialog('Errore', result.errorMessage())
@@ -90,8 +91,10 @@ class DbusCallDaemon:
                 text = '<p><font color="red">' + filepath[i] + ': <big>' + exit_text + '</big></font></p>'
                 ActionFunctions.write_log(ActionFunctions, text)
 
-    def verifySingle(self, filepath, options):
-        result = self.fpiudaemon.call('verifySingle', QDBusVariant(filepath), options)
+    def verifySingle(self, filepath, options={}):
+        fpiudaemon = QDBusInterface(self.service, self.path, interface = self.interface,
+                                    parent = None).setTimeout(120000)
+        result = fpiudaemon.call('verifySingle', QDBusVariant(filepath), options )
         reply = QDBusReply(result)
         if result.type() == 3:
             DialogFunctions.error_dialog('Errore', result.errorMessage())
@@ -113,7 +116,7 @@ class DbusCallDaemon:
         interface = "it.libersoft.firmapiud.dbusinterface.TokenManagerInterface"
         path = "/it/libersoft/firmapiud/TokenManager"
 
-        fpiudaemon = QDBusInterface(service, path, interface = interface, parent = None)
+        fpiudaemon = QDBusInterface(self.service, path, interface = interface, parent = None)
 
         if newcode:
             result = fpiudaemon.call('set'+what, code, newcode)
