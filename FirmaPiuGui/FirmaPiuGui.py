@@ -51,7 +51,8 @@ class DbusCallDaemon:
         :type options: dict
         """
         fpiudaemon = QDBusInterface(self.service, self.path, interface = self.interface,
-                                    parent = None).setTimeout(120000)
+                                    parent = None)
+        fpiudaemon.setTimeout(120000)
         result = fpiudaemon.call('sign', filepath, options)
         reply = QDBusReply(result)
         if result.type() == 3:
@@ -63,18 +64,18 @@ class DbusCallDaemon:
             for i in range(len(filepath)):
                 if (type (reply.value()[filepath[i]]) is str):
                     #todo dai il nome del file sorgente
-                    MainWindow.log_area.append('<big>Ok!</big> Il file è stato salvato come ' +'<big>' +
-                                                reply.value()[filepath[i]] + '</big>\n\n')
+                    MainWindow.log_area.append('<p backgroud-color:"red"><big>Ok!</big> Il file è stato salvato come ' +'<big>' +
+                                                reply.value()[filepath[i]] + '</big></p>')
                 else:
-                    MainWindow.log_area.append('<big>Errore</big>, il documento ' +  filepath[i] +
-                                               ' non è stato firmato')
-                    print ('ugo')
+                    MainWindow.log_area.append('<p backgroud-color:"#ff00cc"><big>Errore</big>, il documento ' +  filepath[i] +
+                                               ' non è stato firmato</p>')
                     DialogFunctions.error_dialog('Errore', 'Errore ' + str(reply.value()[filepath[i]][0]) + ':\n'
                                                  + reply.value()[filepath[i]][1] + '\n\n')
 
     def verify(self, filepath):
         fpiudaemon = QDBusInterface(self.service, self.path, interface = self.interface,
-                                    parent = None).setTimeout(120000)
+                                    parent = None)
+        fpiudaemon.setTimeout(120000)
         result = fpiudaemon.call('verify', filepath)
         reply = QDBusReply(result)
         if result.type() == 3:
@@ -93,7 +94,8 @@ class DbusCallDaemon:
 
     def verifySingle(self, filepath, options={}):
         fpiudaemon = QDBusInterface(self.service, self.path, interface = self.interface,
-                                    parent = None).setTimeout(120000)
+                                    parent = None)
+        fpiudaemon.setTimeout(120000)
         result = fpiudaemon.call('verifySingle', QDBusVariant(filepath), options )
         reply = QDBusReply(result)
         if result.type() == 3:
