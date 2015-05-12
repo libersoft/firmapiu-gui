@@ -100,7 +100,8 @@ class DbusCallDaemon:
         result = fpiudaemon.call('verifySingle', QDBusVariant(filepath), options )
         reply = QDBusReply(result)
         if result.type() == 3:
-            text = '<p>Il file <big>' + filepath + ' NON </big> è un file p7m valido </p>'
+            text = '<p><font color="red">Il file <big>' + filepath + \
+                   ' non </big> è un file p7m valido </font></p>'
             ActionFunctions.write_log(ActionFunctions, text)
             DialogFunctions.error_dialog('Errore', result.errorMessage())
         else:
@@ -112,7 +113,8 @@ class DbusCallDaemon:
                 DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Firma legalmente e tecnicamente valida,'
                                                                        '\ncontrolla il log per i dettagli')
             else :
-                text = '<p>Il file <big>' + filepath + ' NON </big> è un file p7m valido </p>'
+                text = '<p><font color="red">Il file <big>' + filepath + \
+                       ' non </big> è un file p7m valido </font></p>'
                 ActionFunctions.write_log(ActionFunctions, text)
                 DialogFunctions.error_dialog('Errore', 'Il file <big>non</big> è legalmente e tecnicamente valido')
 
