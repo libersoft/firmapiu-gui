@@ -13,3 +13,10 @@ firmapiu-gui/firmapiu_gui.egg-info
 firmapiu-gui/debian/firmapiu-gui.debhelper.log
 firmapiu-gui/debian/firmapiu-gui.substvars
 .*
+
+#Ignora i settings di eclipse
+.project
+.settings/
+.classpath
+bin/
+FirmaPiuGui/__pycache__/
