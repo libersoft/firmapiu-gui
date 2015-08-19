@@ -24,6 +24,7 @@ from PyQt5.Qt import QMessageBox
 from PyQt5.Qt import QWidget
 from PyQt5.Qt import QTabWidget
 from PyQt5.Qt import QLabel
+from PyQt5.Qt import QFrame
 from PyQt5.Qt import QLineEdit
 from PyQt5.Qt import QRegExpValidator
 from PyQt5.Qt import QRegExp
@@ -38,6 +39,59 @@ from PyQt5.Qt import QDBusInterface
 from PyQt5.Qt import QDBusReply
 from checkbox_support.scripts.audio_settings import unlocalized_env
 
+class CardInfoDialog(QDialog):
+    
+    captionErr = "E' stato rilevato un errore"
+    
+    '''
+    Dialog window for showing some information about smartcard
+    '''
+    def __init__(self):
+        super().__init__()
+        # creating link to dbus
+        # checking for deamon, smartcard and smartcard reader presence
+        try:  
+            dbusClient = DbusTokenManagerCallDaemon()
+            self.atr = dbusClient.getATR()
+        except Exception as ex:
+            msg,details = ex.args
+            QMessageBox.warning(QMessageBox(), self.captionErr, details)
+            self.destroy()
+            return
+        
+        #print ATR value:
+        atrLabel = QLabel("ATR:")
+        atrLabelValue = QLabel(self.__getAtrStr__())
+        atrLabelValue.setFrameStyle(QFrame.Panel | QFrame.Sunken)
+        emptyLabel = QLabel(" ")
+        
+        # creating ok button
+        buttonbox = QDialogButtonBox(QDialogButtonBox.Ok)
+        buttonbox.accepted.connect(self.accept)
+        
+        mainLayout = QVBoxLayout()
+        mainLayout.addStretch(1)
+        mainLayout.addWidget(atrLabel)
+        mainLayout.addWidget(atrLabelValue)
+        mainLayout.addWidget(emptyLabel)
+        mainLayout.addWidget(buttonbox)
+        self.setLayout(mainLayout)
+        
+        self.setWindowTitle('Informazioni sulla SmartCard')
+        self.setFixedHeight(150)
+        self.setFixedWidth(650)
+        self.exec_()
+    
+    def __getAtrStr__(self):
+        atrStr = ""
+        for i in self.atr:
+            tmpStr = hex(i)
+            tmpStr = tmpStr.upper()[2:]
+            if len(tmpStr) == 1:
+                tmpStr = "0"+tmpStr
+            atrStr = atrStr+":"+tmpStr
+        atrStr = atrStr[1:]
+        return atrStr
 
 class PinPukTabDialog(QDialog):
     
