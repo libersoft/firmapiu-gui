@@ -122,28 +122,6 @@ class DbusCallDaemon:
                 ActionFunctions.write_log(ActionFunctions, text)
                 DialogFunctions.error_dialog('Errore', 'Il file <big>non</big> è legalmente e tecnicamente valido')
 
-    def pin_puk_ops(self, what, code, newcode=None):
-        '''
-        pin_puk_ops must be called with Pin or Puk case sensitive
-        '''
-        interface = "it.libersoft.firmapiud.dbusinterface.TokenManagerInterface"
-        path = "/it/libersoft/firmapiud/TokenManager"
-
-        fpiudaemon = QDBusInterface(self.service, path, interface = interface, parent = None)
-
-        if newcode:
-            result = fpiudaemon.call('set'+what, code, newcode)
-        else:
-            result = fpiudaemon.call('verify'+what, code)
-        if result.type() == 3:
-            DialogFunctions.error_dialog('Errore', result.errorMessage())
-        else:
-            if newcode:
-                DialogFunctions.info_dialog(DialogFunctions(), 'Info', what + 'cambiato con successo')
-            else:
-                DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Il '+what+' è corretto')
-
-
     def __init__(self, action, filepath, options):
         if action == 'sign':
             self.sign(filepath, options)
@@ -242,7 +220,6 @@ class ActionFunctions(QWidget):
                 DialogFunctions.error_dialog('Errore', 'Selezionare una cartella di destinazione '
                                                        'per il file firmato')
 
-
     def ver_sign_file(self, file=''):
         options = {}
         if file == '':
@@ -280,10 +257,8 @@ class ActionFunctions(QWidget):
         MainWindow.log_area.append(text)
 
     def get_Cardinfo(self):
-
         CardInfoDialog()
         
-
     def __init__(self, parent = None):
         super(ActionFunctions, self).__init__(parent)
 
