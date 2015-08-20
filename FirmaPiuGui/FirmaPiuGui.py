@@ -23,24 +23,80 @@ import glob
 
 from PyQt5.Qt import *
 from PinpukManager import PinPukTabDialog
-from PinpukManager import DbusTokenManagerCallDaemon
 from PinpukManager import CardInfoDialog
 
+#Global Warning dialog window caption message
+errCaption = "Errore"
+#Global Info dialog window caption message
+infoCaption = "Info"
 
+#Global functions
+def code_dialog(what):
+    """
+    
+    :param what:
+    :rtype : str
+    """
+    code_min_len = 5
+    code_max_len = 8
+    code = QInputDialog.getText(QInputDialog(), 'Inserisci il '+what, 'Inserisci il '+what+' della smartcard',
+                               QLineEdit.Password)
+    if code[1]:
+        if code_min_len <= len(code[0]) <= code_max_len:
+            return code[0]
+        else:
+            caption = what+" errato"
+            text = "Il " + what + " <b>deve</b> essere compreso fra " + str(code_min_len) + " e "  + str(code_max_len) + " caratteri"
+            QMessageBox.warning(QMessageBox(), caption, text)
+            code = code_dialog(what)
+            return code
+    else:
+        QMessageBox.warning(QMessageBox(), errCaption, "L\'azione non è stata completata a causa dell\'interruzione dell\'utente")
+
+def file_dialog(action):
+    filters = ''
+    if action == 'sign':
+        caption = 'Scegli il file da firmare:'
+        filelist = QFileDialog.getOpenFileNames(QFileDialog(), caption = caption, filter = filters)
+        return filelist[0]
+    elif action == 'verify':
+        caption = 'Scegli il file da verificare:'
+        filters = 'Signed Files(*.p7m *.p7s)'
+        file = QFileDialog.getOpenFileName(QFileDialog(), caption = caption, filter = filters)
+        return file[0]
+    else:
+        QMessageBox.warning(QMessageBox(), errCaption, "Azione sconosciuta")
+        return False
+
+def folder_dialog(action, default_path=''):
+    filters = ''
+    if action == 'sign':
+        caption = 'Scegli la cartella da firmare:'
+    elif action == 'verify':
+        caption = 'Scegli la cartella da verificare:'
+        filters = 'Signed Files(*.p7m *.p7s)'
+    elif action == 'outdir':
+        caption = 'Scegli la cartella di destinazione'
+        folder = QFileDialog.getExistingDirectory(QFileDialog(), caption=caption, directory=default_path)
+        return folder
+    else:
+        QMessageBox.warning(QMessageBox(), errCaption, "Azione sconosciuta")
+        return False
+    folder = QFileDialog.getExistingDirectory(QFileDialog(), caption, filters)
+    return folder
+
+#Classes
 class DbusCallDaemon:
     service = "it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface"
     path = "/it/libersoft/firmapiud/FirmapiuD"
     interface = 'it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface'
     
-    #Warning dialog window caption message
-    caption = "Errore"
-
     def test_connection(self):
         interface = 'org.freedesktop.DBus.Peer'
         status = QDBusInterface(DbusCallDaemon.interface , DbusCallDaemon.path , interface = interface,
                                 parent = None).call('Ping')
         if status.type() == 3:
-            QMessageBox.warning(QMessageBox(), DbusCallDaemon.caption, 'Il demone non è attivo,\nnon sarà possibile effettuare operazioni')
+            QMessageBox.warning(QMessageBox(), errCaption, 'Il demone non è attivo,\nnon sarà possibile effettuare operazioni')
 
             self.btn_signFile.setDisabled(True)
             self.btn_signFolder.setDisabled(True)
@@ -63,7 +119,7 @@ class DbusCallDaemon:
         result = fpiudaemon.call('sign', filepath, options)
         reply = QDBusReply(result)
         if result.type() == 3:
-            DialogFunctions.error_dialog('Errore', result.errorMessage())
+            QMessageBox.warning(QMessageBox(), errCaption, result.errorMessage())
         else:
             #TODO lo vogliamo sto messaggio?
             #DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Operazione conclusa, controlla i log per'
@@ -76,8 +132,9 @@ class DbusCallDaemon:
                 else:
                     MainWindow.log_area.append('<p backgroud-color:"#ff00cc"><big>Errore</big>, il documento ' +  filepath[i] +
                                                ' non è stato firmato</p>')
-                    DialogFunctions.error_dialog('Errore', 'Errore ' + str(reply.value()[filepath[i]][0]) + ':\n'
-                                                 + reply.value()[filepath[i]][1] + '\n\n')
+                    QMessageBox.warning(QMessageBox(), 
+                                        errCaption, 
+                                        'Errore ' + str(reply.value()[filepath[i]][0]) + ':\n' + reply.value()[filepath[i]][1] + '\n\n')
 
     def verify(self, filepath):
         fpiudaemon = QDBusInterface(self.service, self.path, interface = self.interface,
@@ -86,10 +143,9 @@ class DbusCallDaemon:
         result = fpiudaemon.call('verify', filepath)
         reply = QDBusReply(result)
         if result.type() == 3:
-            DialogFunctions.error_dialog('Errore', result.errorMessage())
+            QMessageBox.warning(QMessageBox(), errCaption, result.errorMessage())
         else:
-            DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Firma valida\ncontrolla il log per'
-                                                                   ' i dettagli')
+            QMessageBox.information(QMessageBox(), infoCaption, "Firma valida\ncontrolla il log per i dettagli")
             for i in range(len(filepath)):
                 outstatus = reply.value()[filepath[i]]
                 if outstatus.split(sep=':', maxsplit=1)[1] == ' true':
@@ -109,20 +165,20 @@ class DbusCallDaemon:
             text = '<p><font color="red">Il file <big>' + filepath + \
                    ' non </big> è un file p7m valido </font></p>'
             ActionFunctions.write_log(ActionFunctions, text)
-            DialogFunctions.error_dialog('Errore', result.errorMessage())
+            QMessageBox.warning(QMessageBox(), errCaption, result.errorMessage())
         else:
             legal = reply.value()[0]['legallysigned']
             tech = reply.value()[0]['oksigned']
             if type(legal) is bool and legal and type(tech) is bool and tech:
                 text = '<p>Il file <big>' + filepath + '</big> risulta legalmente e tecnicamente valido</p>'
                 ActionFunctions.write_log(ActionFunctions, text)
-                DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Firma legalmente e tecnicamente valida,'
+                QMessageBox.information(QMessageBox(), infoCaption, 'Firma legalmente e tecnicamente valida,'
                                                                        '\ncontrolla il log per i dettagli')
             else :
                 text = '<p><font color="red">Il file <big>' + filepath + \
                        ' non </big> è un file p7m valido </font></p>'
                 ActionFunctions.write_log(ActionFunctions, text)
-                DialogFunctions.error_dialog('Errore', 'Il file <big>non</big> è legalmente e tecnicamente valido')
+                QMessageBox.warning(QMessageBox(), errCaption, 'Il file <big>non</big> è legalmente e tecnicamente valido')
 
     def __init__(self, action, filepath, options):
         if action == 'sign':
@@ -134,126 +190,56 @@ class DbusCallDaemon:
         else:
             print('Opzione non riconosciuta')
 
-
-class DialogFunctions(QWidget):
-    def info_dialog(self, caption, text):
-        QMessageBox.information(QMessageBox(), caption, text)
-
-    def code_dialog(what):
-        """
-
-
-        :param what:
-        :rtype : str
-        """
-        code_min_len = 5
-        code_max_len = 8
-        code = QInputDialog.getText(QInputDialog(), 'Inserisci il '+what, 'Inserisci il '+what+' della smartcard',
-                                   QLineEdit.Password)
-        if code[1]:
-            if code_min_len <= len(code[0]) <= code_max_len:
-                return code[0]
-            else:
-                DialogFunctions.error_dialog(what+' errato', 'Il '+what+ ' <b>deve</b> essere compreso fra '
-                                             + str(code_min_len) + ' e '  + str(code_max_len) + ' caratteri')
-                code = DialogFunctions.code_dialog(what)
-                return code
-        else:
-            DialogFunctions.error_dialog('Errore',
-                                         'L\'azione non è stata completata a causa dell\'interruzione dell\'utente')
-
-    def file_dialog(self, action):
-        filters = ''
-        if action == 'sign':
-            caption = 'Scegli il file da firmare:'
-            filelist = QFileDialog.getOpenFileNames(QFileDialog(), caption = caption, filter = filters)
-            return filelist[0]
-        elif action == 'verify':
-            caption = 'Scegli il file da verificare:'
-            filters = 'Signed Files(*.p7m *.p7s)'
-            file = QFileDialog.getOpenFileName(QFileDialog(), caption = caption, filter = filters)
-            return file[0]
-        else:
-            DialogFunctions.error_dialog('Errore', 'Azione sconosciuta')
-            return False
-
-
-    def folder_dialog(self, action, default_path=''):
-        filters = ''
-        if action == 'sign':
-            caption = 'Scegli la cartella da firmare:'
-        elif action == 'verify':
-            caption = 'Scegli la cartella da verificare:'
-            filters = 'Signed Files(*.p7m *.p7s)'
-        elif action == 'outdir':
-            caption = 'Scegli la cartella di destinazione'
-            folder = QFileDialog.getExistingDirectory(QFileDialog(), caption=caption, directory=default_path)
-            return folder
-        else:
-            DialogFunctions.error_dialog('Errore', 'Azione sconosciuta')
-            return False
-        folder = QFileDialog.getExistingDirectory(QFileDialog(), caption, filters)
-        return folder
-
-    def error_dialog(caption, text):
-        """
-
-        :type caption: str
-        :type text: str
-        """
-        QMessageBox.warning(QMessageBox(), caption, text)
-
-
 class ActionFunctions(QWidget):
     def sign_file(self, filelist=[], outdir=''):
         options = {}
         options['outdir'] = outdir
         if not filelist:
-            filelist = DialogFunctions.file_dialog(DialogFunctions(), 'sign')
+            filelist = file_dialog('sign')
         if filelist:
             filepath = QFileInfo(filelist[0]).canonicalPath()
             if options['outdir'] == '':
-                options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir', filepath)
+                options['outdir'] = folder_dialog('outdir', filepath)
             if options['outdir'] != '':
-                options['pin'] = DialogFunctions.code_dialog('Pin')
+                options['pin'] = code_dialog('Pin')
                 if (options['pin']):
                     DbusCallDaemon('sign', filelist, options)
             else:
-                DialogFunctions.error_dialog('Errore', 'Selezionare una cartella di destinazione '
+                QMessageBox.warning(QMessageBox(), errCaption, 'Selezionare una cartella di destinazione '
                                                        'per il file firmato')
 
     def ver_sign_file(self, file=''):
         options = {}
         if file == '':
-            file = DialogFunctions.file_dialog(DialogFunctions(), 'verify')
+            file = file_dialog('verify')
         if file != '':
             DbusCallDaemon('verifySingle', file, options)
 
     def sign_folder(self, folder=[]):
         options = {}
         if folder == []:
-            folder = DialogFunctions.folder_dialog(DialogFunctions(), 'sign')
+            folder = folder_dialog('sign')
         files = glob.glob(folder + "/*.*")
         if (len(files) > 0):
-            options['outdir'] = DialogFunctions.folder_dialog(DialogFunctions(), 'outdir')
+            options['outdir'] = folder_dialog('outdir')
             if options['outdir'] != '':
-                options['pin'] = DialogFunctions.code_dialog('Pin')
+                options['pin'] = code_dialog('Pin')
                 DbusCallDaemon('sign', files, options)
         else:
-            DialogFunctions.error_dialog("Nessun file", "La cartella selezionata non contiene nessun"
-                                                        " file oppure non è stata selezionata "
-                                                        "nessuna cartella")
+            QMessageBox.warning(QMessageBox(), errCaption,  "La cartella selezionata non contiene nessun"
+                                                            " file oppure non è stata selezionata "
+                                                            "nessuna cartella")
 
     def ver_sign_folder(self):
-        folder = DialogFunctions.folder_dialog(DialogFunctions(), 'verify')
+        folder = folder_dialog('verify')
         files = glob.glob(folder + "/*.p7m*")
         files = files + glob.glob(folder + "/*.p7s*")
         if files:
             DbusCallDaemon('verify', files, '')
         else:
-            DialogFunctions.error_dialog("Nessun file", "La cartella selezionata non contiene nessun"
-                                                        " file oppure non è stata selezionata nessuna"
-                                                        " cartella")
+            QMessageBox.warning(QMessageBox(), errCaption,  "La cartella selezionata non contiene nessun"
+                                                            " file oppure non è stata selezionata "
+                                                            "nessuna cartella")
 
     def write_log(self, text):
         MainWindow.log_area.append(text)
@@ -263,7 +249,6 @@ class ActionFunctions(QWidget):
         
     def __init__(self, parent = None):
         super(ActionFunctions, self).__init__(parent)
-
 
 class LabelDND(QLabel):
     def __init__(self, title, parent):
@@ -301,7 +286,7 @@ class LabelDND(QLabel):
             ActionFunctions.ver_sign_file(ActionFunctions(), to_be_checked[0])
         elif len(to_be_checked) > 1:
             to_be_signed.append(to_be_checked)
-            DialogFunctions.info_dialog(DialogFunctions(), 'Attenzione', 'Stai per firmare un documento già firmato')
+            QMessageBox.information(QMessageBox(), "Attenzione", "Stai per firmare un documento già firmato")
         else:
             pass
         if len(to_be_signed) > 0:
