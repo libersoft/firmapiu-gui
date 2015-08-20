@@ -31,20 +31,23 @@ class DbusCallDaemon:
     service = "it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface"
     path = "/it/libersoft/firmapiud/FirmapiuD"
     interface = 'it.libersoft.firmapiud.dbusinterface.FirmapiuDInterface'
+    
+    #Warning dialog window caption message
+    caption = "Errore"
 
     def test_connection(self):
         interface = 'org.freedesktop.DBus.Peer'
         status = QDBusInterface(DbusCallDaemon.interface , DbusCallDaemon.path , interface = interface,
                                 parent = None).call('Ping')
         if status.type() == 3:
-            DialogFunctions.error_dialog('Errore', 'Il demone non è attivo,\nnon sarà possibile effettuare\nopearazioni'
-                                                   ' che utilizzino la smartcard.')
+            QMessageBox.warning(QMessageBox(), DbusCallDaemon.caption, 'Il demone non è attivo,\nnon sarà possibile effettuare operazioni')
 
             self.btn_signFile.setDisabled(True)
             self.btn_signFolder.setDisabled(True)
             self.btn_verFile.setDisabled(True)
             self.btn_ver_folder.setDisabled(True)
             self.btn_manage_pin.setDisabled(True)
+            self.btn_id_smartcard.setDisabled(True)
             self.btn_dnd.setAcceptDrops(False)
         else:
             pass
