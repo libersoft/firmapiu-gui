@@ -20,7 +20,7 @@
 
 __author__ = 'svalo'
 import sys
-from FirmaPiuGui import *
+from FirmaPiuGui.FirmaPiuGui import *
 if __name__ == '__main__':
     qt_app = QApplication(sys.argv)
     app = MainWindow()
