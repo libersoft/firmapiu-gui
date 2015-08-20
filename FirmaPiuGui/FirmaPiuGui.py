@@ -110,8 +110,7 @@ class DbusCallDaemon:
         else:
             legal = reply.value()[0]['legallysigned']
             tech = reply.value()[0]['oksigned']
-            #TODO bug da correggere
-            if legal and tech:
+            if type(legal) is bool and legal and type(tech) is bool and tech:
                 text = '<p>Il file <big>' + filepath + '</big> risulta legalmente e tecnicamente valido</p>'
                 ActionFunctions.write_log(ActionFunctions, text)
                 DialogFunctions.info_dialog(DialogFunctions(), 'Info', 'Firma legalmente e tecnicamente valida,'
