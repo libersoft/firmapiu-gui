@@ -22,8 +22,8 @@ import sys
 import glob
 
 from PyQt5.Qt import *
-from PinpukManager import PinPukTabDialog
-from PinpukManager import CardInfoDialog
+from FirmaPiuGui.PinpukManager import PinPukTabDialog
+from FirmaPiuGui.PinpukManager import CardInfoDialog
 
 #Global Warning dialog window caption message
 errCaption = "Errore"

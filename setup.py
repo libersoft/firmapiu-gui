@@ -20,7 +20,7 @@ changelog = 'debian/changelog'
 files=['data/icons/tango/verifica96x96.png','data/icons/tango/96px-Document-open.svg.png', 'data/icons/tango/firma96x96.png', 'data/icons/tango/impostazioni96x96.png',  'data/icons/tango/smartcardsets96x96.png', 'data/icons/tango/verifica96x96.png', 'data/icons/tango/window-close-symbolic.png','data/fpiu.svg']
 
 setup(name = "firmapiu-gui",
-	version = '0.4',
+	version = '0.6',
 	description = "GUI for the firmapiud daemon",
 	author = "Valerio Baldisserotto",
 	author_email = "svalo@libersoft.it",

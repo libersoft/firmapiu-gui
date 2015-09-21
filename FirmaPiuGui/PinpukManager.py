@@ -37,7 +37,7 @@ from PyQt5.Qt import Qt
 # dbus modules
 from PyQt5.Qt import QDBusInterface
 from PyQt5.Qt import QDBusReply
-from checkbox_support.scripts.audio_settings import unlocalized_env
+#from checkbox_support.scripts.audio_settings import unlocalized_env
 
 class CardInfoDialog(QDialog):
     
