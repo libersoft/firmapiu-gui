@@ -1,0 +1,92 @@
+firmapiu-gui (0.6.0-1) libersoft-devel; urgency=medium
+
+  *     Corrects import path, bump version in setup
+
+ -- Valerio Baldisserotto <svalo@libersoft.it>  Mon, 21 Sep 2015 17:12:03 +0200
+
+firmapiu-gui (0.6.0) libersoft-devel; urgency=medium
+
+  [ dellanna ]
+  * updating .gitignore to ignore eclipse settings
+  * Added FirmaPiuGui/test_dbus.py
+  *  modified FirmaPiuGui/firmapiu-gui for testing purpose
+  * Added a module for Pin/Puk managment
+  * Added a standalone command script for pkcs11 pin/puk managment
+  * Added Card Info dialog window in FirmaPiuGui/FirmaPiuGui.py
+  * Merged the pin/puk Firmapiu/PinPukManager.py module features in FirmapiuGui/FirmapiuGui.py
+  * cleaning FirmapiuGui/FirmapiuGui.py old code and deleting test modules
+  * Reverted imports in firmapiu-gui and firmapiu-pin
+  * FirmaPiuGui/FirmaPiuGui.py bugfix about verifying .p7m files.
+  * Bugfix
+  * Refactoring DialogFunctions methods to global functions
+
+
+ -- dellanna <ada@libersoft.it>  Mon, 21 Sep 2015 15:56:29 +0200
+
+firmapiu-gui (0.5.1-1) libersoft-devel; urgency=medium
+
+  * Changed how error messages appears in the logarea
+
+ -- Valerio Baldisserotto <valo@eigenlab.org>  Tue, 12 May 2015 09:33:02 +0200
+
+firmapiu-gui (0.5.1) libersoft-devel; urgency=medium
+
+  * Added defs of function handling Pin and Puk
+  * Changed how the app is executed
+  * DBus object and path are now parameters
+  * Empty functions for pin and puk
+  * Added class to draw gui for pin and puk
+  * Removed done TODOs
+  * Activated Manage button
+  * Cleaned up TODOs and improved messages
+  * Improved Class ChangeCodes
+  * Added skeleton of DBus call to change/verify codes
+  * pin_dialog now is code_dialog, supports both Pin and Puk
+  * Fixed spacing and definition of function
+  * Increase timeout to handle larger files
+  * Errors on operations on single files are displayed,bug fixes
+  * Added verifySingle to adhere to new signatures
+
+ -- Valerio Baldisserotto <valo@eigenlab.org>  Mon, 11 May 2015 18:07:25 +0200
+
+firmapiu-gui (0.5.0) libersoft-devel; urgency=medium
+
+  * Default output folder are the same as the file source folder
+  * Drag and drop automatically saves file in source folder
+  * Close icon is red
+
+ -- Valerio Baldisserotto <svalo@libersoft.it>  Fri, 10 Apr 2015 10:41:43 +0200
+
+firmapiu-gui (0.4.4-1) libersoft-devel; urgency=medium
+
+  * try to fix Mint error launching from menu
+
+ -- Valerio Baldisserotto <svalo@libersoft.it>  Mon, 23 Mar 2015 11:28:45 +0100
+
+firmapiu-gui (0.4.4) libersoft-devel; urgency=medium
+
+  * Added copyright notice and license in source code try to fix Mint error launching from menu 
+
+ -- Valerio Baldisserotto <svalo@libersoft.it>  Mon, 23 Mar 2015 10:29:36 +0100
+
+firmapiu-gui (0.4.3) libersoft-devel; urgency=medium
+
+  * Changed DBus interface and method
+
+ -- Valerio Baldisserotto <svalo@libersoft.it>  Tue, 10 Mar 2015 08:28:28 +0100
+
+firmapiu-gui (0.4.2) libersoft-devel; urgency=medium
+
+  * (Closes: #2060, #2061, #2062, #2064)
+  * Fixed verify function call
+  * Added button icons
+  * Fully working log area
+  * Fully working drag and drop
+
+ -- Valerio Baldisserotto <svalo@libersoft.it>  Mon, 02 Mar 2015 11:59:25 +0100
+
+firmapiu-gui (0.4) libersoft-devel; urgency=low
+
+  * Initial release (Closes: #2066) 
+
+ -- Valerio Baldisserotto <svalo@libersoft.it>  Wed, 04 Feb 2015 15:20:33 +0100
