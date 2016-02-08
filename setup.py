@@ -1,4 +1,7 @@
-# Copyright (C) 2015 Valerio Baldisserotto <svalo[at]libersoft[dot]it”
+#!/usr/bin/python3
+
+# Copyright (C) 2015 Libersoft srl <info[at]libersoft[dot]it
+# Author Valerio Baldisserotto <svalo[at]libersoft[dot]it
 
 #This file is part of firmapiu-gui.
 #
