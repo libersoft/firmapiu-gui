@@ -15,7 +15,7 @@ Log area -> Gives feedback on the action if it succeeds, if something goes wrong
 
 ## How to build .deb package
 In order to build the debian package you'll need:
-* git 
+* git
 * debuild
 
 
@@ -24,11 +24,9 @@ In order to build the debian package you'll need:
 
 1. git clone https://github.com/libersoft/firmapiu-gui.git
 2. cd firmapiu-packages
-3. git submodules init
-4. git submodules update
-5. cd <package folder>
-6. git checkout debian
-7. debuild -uc -us 
+3. git checkout debian
+4. cd debian
+5. debuild -uc -us
 
 Now you should have your .deb package located in the parent folder (..)
 
