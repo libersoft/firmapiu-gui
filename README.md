@@ -22,7 +22,7 @@ In order to build the debian package you'll need:
 `sudo apt-get install git debuild`
 
 
-1. git clone https://github.com/libersoft/firmapiu-packages.git
+1. git clone https://github.com/libersoft/firmapiu-gui.git
 2. cd firmapiu-packages
 3. git submodules init
 4. git submodules update
